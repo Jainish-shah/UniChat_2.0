@@ -138,7 +138,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           if (isLastPage) // Check if it's the last page and show the button
             Padding(
-              padding: const EdgeInsets.only(bottom: 28.0),
+              padding: const EdgeInsets.only(bottom: 10.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue, // Button color
@@ -148,7 +148,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage()));
                 },
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 6.0),
                   child: Text(
                     'GET STARTED',
                     style: TextStyle(fontSize: 20),
