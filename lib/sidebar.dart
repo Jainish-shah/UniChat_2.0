@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // If you plan to use SVG icons
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:unichat_poojan_project/main_home_page.dart'; // If you plan to use SVG icons
 
 class CustomSidebar extends StatefulWidget {
+  final Function(HomePageBody) updateBody;
+
+  CustomSidebar({required this.updateBody});
   @override
   _CustomSidebarState createState() => _CustomSidebarState();
 }
@@ -37,7 +41,10 @@ class _CustomSidebarState extends State<CustomSidebar> {
                 ListTile(
                   leading: Icon(Icons.home, color: currentTheme.primaryColor),
                   title: Text('Home', style: TextStyle(color: currentTheme.primaryColor)),
-                  onTap: () {}, // Handle navigation or action
+                  onTap: () {
+                    widget.updateBody(HomePageBody.discord); // Use the callback to update the body
+                    Navigator.pop(context);
+                  },
                 ),
 
 
@@ -52,15 +59,16 @@ class _CustomSidebarState extends State<CustomSidebar> {
                   leading: Icon(Icons.flight_takeoff, color: currentTheme.primaryColor), // Example icon for "Port to KF"
                   title: Text('Port to KF', style: TextStyle(color: currentTheme.primaryColor)),
                   onTap: () {
-                    // Handle "Port to KF" action here
+                    widget.updateBody(HomePageBody.portToKf);
+                    Navigator.pop(context);
                   },
                 ),
                 ListTile(
                   leading: Icon(Icons.folder_open, color: currentTheme.primaryColor), // Example icon for "My Google Drive"
                   title: Text('My Google Drive', style: TextStyle(color: currentTheme.primaryColor)),
                   onTap: () {
-                    // Handle "My Google Drive" action here
-                    // This might involve opening a file picker or navigating to a screen that handles Google Drive integration
+                    widget.updateBody(HomePageBody.googleDrive);
+                    Navigator.pop(context);
                   },
                 ),
               ],
