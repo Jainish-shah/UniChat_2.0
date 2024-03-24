@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'RegistrationSuccessPage.dart';
+
 class RegisterSchoolPage extends StatefulWidget {
   @override
   _RegisterSchoolPageState createState() => _RegisterSchoolPageState();
@@ -40,44 +42,63 @@ class _RegisterSchoolPageState extends State<RegisterSchoolPage> {
 
   Future<void> sendRequest(BuildContext context, {required String schoolName, required String schoolAddress1, String? schoolAddress2, required String city, required String state, required String country, required String zipCode, required String adminFirstName, required String adminLastName, required String adminEmail}) async {
     if(schoolName.isNotEmpty && schoolAddress1.isNotEmpty && city.isNotEmpty && state.isNotEmpty && country.isNotEmpty && zipCode.isNotEmpty && adminFirstName.isNotEmpty && adminLastName.isNotEmpty && adminEmail.isNotEmpty) {
-      var response = await http.post(
-        Uri.parse(''),
+      final url = 'http://10.0.2.2:3000/registerSchool'; // here when testing for IOS there should be "localhost" and for android there should be 10.0.2.2
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
         body: json.encode({
-          "schoolname": _schoolNameController.text,
-          "schooladdress1": _schoolAddressLine1Controller.text,
-          "schooladdress2": _schoolAddressLine2Controller.text,
-          "schoolcity": _cityController.text,
-          "schoolstate": _stateController.text,
-          "schoolpincode": _zipCodeController.text,
-          "schoolcountry": _countryController.text,
-          "schooladminFname": _adminFirstNameController.text,
-          "schooladminLname": _adminLastNameController.text,
-          "schooladminemail": _adminEmailAddressController.text,
+          "schoolName": _schoolNameController.text,
+          "schoolAddressLine1": _schoolAddressLine1Controller.text,
+          "schoolAddressLine2": _schoolAddressLine2Controller.text,
+          "city": _cityController.text,
+          "state": _stateController.text,
+          "country": _countryController.text,
+          "zipCode": _zipCodeController.text,
+          "adminFirstName": _adminFirstNameController.text,
+          "adminLastName": _adminLastNameController.text,
+          "adminEmailAddress": _adminEmailAddressController.text,
           "approvalStatus": "Pending"
-          // Add the rest of your parameters here
         }),
-        // Include headers, authentication, etc., as needed
       );
+
       if (response.statusCode == 200) {
-        setState(() {
-          _isSubmitted = true;
-          dispose();
-        });
-      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => RegistrationSuccessPage()),
+        );
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Error'),
-            content: Text('End point is not specified properly'),
-            actions: [
+            title: Text('Success'),
+            content: Text('Registration successful.'),
+            actions: <Widget>[
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('try agan'),
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
               ),
             ],
           ),
         );
-        dispose();
+      } else {
+        // Error handling
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('Failed to register school.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
       }
     } else {
       // One or more fields are empty, handle validation failure
@@ -86,12 +107,12 @@ class _RegisterSchoolPageState extends State<RegisterSchoolPage> {
         builder: (context) => AlertDialog(
           title: Text('Error'),
           content: Text('All fields must be filled.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
+          // actions: [
+          //   TextButton(
+          //     onPressed: () => Navigator.of(context).pop(),
+          //     child: Text('OK'),
+          //   ),
+          // ],
         ),
       );
     }
@@ -156,7 +177,6 @@ class _RegisterSchoolPageState extends State<RegisterSchoolPage> {
                         , zipCode: _zipCodeController.text, adminFirstName: _adminFirstNameController.text
                         , adminLastName: _adminLastNameController.text, adminEmail: _adminEmailAddressController.text);
                   });
-
                 },
                 child: Text('Submit'),
               ),

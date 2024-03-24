@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unichat_poojan_project/splash_page.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 import 'instructor_login_page.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: ThemeMode.dark,
-      home: MyHomePage(),
+      home: splash_page(),
+      // home: MyHomePage(),
     );
   }
 }

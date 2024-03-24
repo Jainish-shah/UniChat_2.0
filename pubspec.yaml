@@ -74,6 +74,8 @@ flutter:
     - assets/Register.png
     - assets/Check.gif
     - assets/loginimage1.png
+    - assets/collab.jpg
+    - assets/teacher.png
     - assets/ChatGPT_icon.png
   # To add assets to your application, add an assets section, like this:
   # assets:
