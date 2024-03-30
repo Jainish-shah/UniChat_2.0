@@ -1,7 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+        <uses-permission android:name="android.permission.INTERNET"/>  <!--  google drive auth-->
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!--  google drive auth-->
+       <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>  <!--  google drive auth-->
     <application
         android:label="unichat_poojan_project"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

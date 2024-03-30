@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:unichat_poojan_project/main_home_page.dart'; // If you plan to use SVG icons
+import 'package:unichat_poojan_project/main_home_page.dart';
+
+import 'google_drive.dart'; // If you plan to use SVG icons
 
 class CustomSidebar extends StatefulWidget {
   final Function(HomePageBody) updateBody;
@@ -39,36 +41,38 @@ class _CustomSidebarState extends State<CustomSidebar> {
                 ),
                 Divider(),
                 ListTile(
-                  leading: Icon(Icons.home, color: currentTheme.primaryColor),
-                  title: Text('Home', style: TextStyle(color: currentTheme.primaryColor)),
-                  onTap: () {
-                    widget.updateBody(HomePageBody.discord); // Use the callback to update the body
-                    Navigator.pop(context);
-                  },
+                  leading: Icon(Icons.home, color: Colors.white),
+                  title: Text('Home', style: TextStyle(color: Colors.white)),
+                    onTap: () {
+                      widget.updateBody(HomePageBody.discord); // Use the callback to update the body
+                      Navigator.pop(context);
+                    },
                 ),
 
 
                 ExpansionTile(
-                  leading: SvgPicture.asset('assets/icons/dvr_outlined.svg', color: currentTheme.primaryColor), // Example for using SVG
-                  title: Text('All Projects', style: TextStyle(color: currentTheme.primaryColor)),
+                  leading: SvgPicture.asset('assets/icons/dvr_outlined.svg', color: Colors.white), // Example for using SVG
+                  title: Text('All Projects', style: TextStyle(color: Colors.white)),
                   children: [
                     // Dynamic list of projects or other items
                   ],
                 ),
                 ListTile(
-                  leading: Icon(Icons.flight_takeoff, color: currentTheme.primaryColor), // Example icon for "Port to KF"
-                  title: Text('Port to KF', style: TextStyle(color: currentTheme.primaryColor)),
+                  leading: Icon(Icons.flight_takeoff, color: Colors.white), // Example icon for "Port to KF"
+                  title: Text('Port to KF', style: TextStyle(color: Colors.white)),
                   onTap: () {
-                    widget.updateBody(HomePageBody.portToKf);
-                    Navigator.pop(context);
+                    // widget.updateBody(HomePageBody.portToKf);
+                    // Navigator.pop(context);
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.folder_open, color: currentTheme.primaryColor), // Example icon for "My Google Drive"
-                  title: Text('My Google Drive', style: TextStyle(color: currentTheme.primaryColor)),
+                  leading: Icon(Icons.folder_open, color: Colors.white), // Example icon for "My Google Drive"
+                  title: Text('My Google Drive', style: TextStyle(color: Colors.white)),
                   onTap: () {
                     widget.updateBody(HomePageBody.googleDrive);
-                    Navigator.pop(context);
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => GoogleDrive(), // Navigate to success page
+                    ));
                   },
                 ),
               ],
