@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.5 <4.0.0'
+  sdk: '>=2.18.5 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,17 +30,39 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_sign_in: ^6.2.1
   google_fonts: ^6.2.0
   flutter_svg: ^2.0.10+1
   http: ^1.0.0
-
   mongo_dart: ^0.10.0
   webview_flutter: ^3.0.0
+  url_launcher: ^6.0.20
+  shared_preferences: ^2.0.15
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.8
+  firebase_ui_auth: ^1.13.1
+#  google_sign_in: ^6.2.1
+  flutter_secure_storage: ^9.0.0
+  googleapis: ^12.0.0
+#  googleapis_auth: ^1.3.0
+  path_provider: ^2.0.8
+  file_picker: ^8.0.0+1
+#  google_sign_in: ^5.0.4
+  google_sign_in: ^6.2.1
+  googleapis_auth: ^1.0.0
+  googledrivehandler: ^1.0.7
+#  flutter_web_auth: ^0.3.1
+  open_file: ^3.3.2
+  flutter_launcher_icons: ^0.13.1
+  flutter_pdfview: ^1.2.1
+
+flutter_icons:
+  image_path: "assets/app_logo1.png"
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:
@@ -52,7 +74,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^3.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -77,6 +99,7 @@ flutter:
     - assets/collab.jpg
     - assets/teacher.png
     - assets/ChatGPT_icon.png
+    - assets/google.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

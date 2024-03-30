@@ -2,17 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'main.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: RegistrationSuccessPage(),
-    );
-  }
-}
-
 class RegistrationSuccessPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -43,11 +32,11 @@ class RegistrationSuccessPage extends StatelessWidget {
             ),
             SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () { Navigator.pushAndRemoveUntil(
+              onPressed: () => Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => MyHomePage()),
-                ModalRoute.withName('/'),
-              );},
+                MaterialPageRoute(builder: (context) => MyHomePage()), // Make sure MyHomePage exists
+                    (Route<dynamic> route) => false, // Removes all routes below the new route
+              ),
               child: Text('GO BACK'),
               style: ElevatedButton.styleFrom(
                 primary: Colors.white,
