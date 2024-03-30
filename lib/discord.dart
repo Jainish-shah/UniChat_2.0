@@ -23,12 +23,14 @@ class _DiscordWidgetState extends State<DiscordWidget> {
   Widget build(BuildContext context) {
     // String widgetBotUrl = "https://e.widgetbot.io/channels/${widget.prop}";
     // String widgetBotUrl = 'https://e.widgetbot.io/channels/${channelId}';
+    String widgetBotUrl = 'https://e.widgetbot.io/';
+
 
     return Scaffold(
       appBar: AppBar(title: Text('Discord Channel')),
       body: widget.channelId.isNotEmpty
           ? WebView(
-        // initialUrl: widgetBotUrl,
+        initialUrl: widgetBotUrl,
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
           // Perform initial setup on the webview here
