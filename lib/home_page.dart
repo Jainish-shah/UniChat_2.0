@@ -78,31 +78,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Column(
-          children: [
-            MultiLayerParallax(offset: _offset),
-            SizedBox(height: 20),
-            AnimatedOpacity(
-              opacity: 1.0,
-              duration: Duration(seconds: 1),
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'About Us',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Kode Mono',
-                  ),
-                ),
-              ),
-            ),
-            _buildImageDescriptionSection('assets/aboutimg1.png', 'Unichat is the ultimate project management application that seamlessly integrates with Google Docs and leverages the power of Discord for communication.'),
-            _buildImageDescriptionSection('assets/aboutimg2.jpeg', 'With Unichat, teams can collaborate effectively, manage projects efficiently, and brainstorm ideas effortlessly with the help of AI.'),
-            _buildImageDescriptionSection('assets/AI.jpeg', 'Unichat empowers educators to oversee student activities, monitor progress, and facilitate seamless communication, enhancing classroom efficiency and student engagement.'),
-            _buildImageDescriptionSection('assets/logo.png', 'With AI assistance, students can harness their creativity and brainstorm innovative ideas, fostering a collaborative learning environment and enhancing problem-solving skills.'),
-            // Add more widgets as needed
-          ],
+          // child
         ),
       ),
     );
