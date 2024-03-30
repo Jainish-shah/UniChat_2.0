@@ -1,64 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-class DiscordWidget extends StatelessWidget {
-  final String discordServerId;
-  final List<dynamic> projects; // Assuming projects is a list of dynamic objects
+class DiscordWidget extends StatefulWidget {
+  // final String prop;
+  //
+  // DiscordWidget({Key? key, required this.prop}) : super(key: key);
 
-  DiscordWidget({Key? key, required this.discordServerId, required this.projects}) : super(key: key);
+  final String channelId;
+
+  // Constructor requires a channelId
+  DiscordWidget({Key? key, required this.channelId}) : super(key: key);
+
+
+  @override
+  _DiscordWidgetState createState() => _DiscordWidgetState();
+}
+
+class _DiscordWidgetState extends State<DiscordWidget> {
+  late String channelId;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      child: discordServerId == "noProjectsFound"
-          ? Center(
+    // String widgetBotUrl = "https://e.widgetbot.io/channels/${widget.prop}";
+    // String widgetBotUrl = 'https://e.widgetbot.io/channels/${channelId}';
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Discord Channel')),
+      body: widget.channelId.isNotEmpty
+          ? WebView(
+        // initialUrl: widgetBotUrl,
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          // Perform initial setup on the webview here
+        },
+        onProgress: (int progress) {
+          print("WebView is loading (progress : $progress%)");
+        },
+      )
+          : Center(
         child: Text(
           'No Projects Found',
-          style: TextStyle(color: Colors.white, fontFamily: 'Kode Mono'),
+          style: TextStyle(color: Colors.white),
         ),
-      )
-          : discordServerId == "noProjectSelected"
-          ? Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Select a project to view its discord server',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontFamily: 'Kode Mono', fontWeight: FontWeight.bold),
-          ),
-          Divider(color: Colors.blue, thickness: 2), // Customize this
-          // Display projects list if available
-          Expanded(
-            child: GridView.builder(
-              padding: EdgeInsets.all(8),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-              itemCount: projects.length,
-              itemBuilder: (context, index) {
-                var project = projects[index];
-                return Card(
-                  color: Colors.grey, // Customize this
-                  child: InkWell(
-                    onTap: () {
-                      // Handle project selection
-                    },
-                    child: Center(
-                      child: Text(
-                        project['projectName'], // Adjust based on your project object
-                        style: TextStyle(color: Colors.white, fontFamily: 'Kode Mono'),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      )
-          : Container(
-        // An iframe equivalent in Flutter could be a WebView for embedding an external webpage
-        // Flutter doesn't support iframe directly but you can use webview_flutter package to embed web content
-        child: Center(child: Text('Discord screen placeholder')),
       ),
     );
   }
