@@ -12,7 +12,12 @@
           "package_name": "com.example.unichat_poojan_project"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "411117759913-b4g81m5ts91mf70levgn04f99ti65r5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBkkstHtu_1qbpytyB6Rt_jsnFJO2U_Xuo"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411117759913-b4g81m5ts91mf70levgn04f99ti65r5u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "411117759913-ns2qui09eppjjg5tuj4967g7k54ur628.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.unichatPoojanProject.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }

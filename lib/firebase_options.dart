@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -46,6 +43,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyA17JAWeO9Ch4sgC6HXhFQ83EPV7ati45o',
+    appId: '1:411117759913:web:0857293f3081ba42ea68b8',
+    messagingSenderId: '411117759913',
+    projectId: 'unichat2-c79f7',
+    authDomain: 'unichat2-c79f7.firebaseapp.com',
+    storageBucket: 'unichat2-c79f7.appspot.com',
+    measurementId: 'G-1RGPML2S5Y',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBkkstHtu_1qbpytyB6Rt_jsnFJO2U_Xuo',
     appId: '1:411117759913:android:40181dbada5df7c5ea68b8',
@@ -60,6 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '411117759913',
     projectId: 'unichat2-c79f7',
     storageBucket: 'unichat2-c79f7.appspot.com',
+    iosClientId: '411117759913-oivnno8fu857nturnopqjv4e5c00rj93.apps.googleusercontent.com',
     iosBundleId: 'com.example.unichatPoojanProject',
   );
 
@@ -69,6 +77,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '411117759913',
     projectId: 'unichat2-c79f7',
     storageBucket: 'unichat2-c79f7.appspot.com',
+    iosClientId: '411117759913-ns2qui09eppjjg5tuj4967g7k54ur628.apps.googleusercontent.com',
     iosBundleId: 'com.example.unichatPoojanProject.RunnerTests',
   );
 }
