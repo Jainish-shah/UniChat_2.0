@@ -1,43 +1,26 @@
 {
   "project_info": {
-    "project_number": "411117759913",
-    "project_id": "unichat2-c79f7",
-    "storage_bucket": "unichat2-c79f7.appspot.com"
+    "project_number": "730450509070",
+    "project_id": "softwareengg-2f798",
+    "storage_bucket": "softwareengg-2f798.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:411117759913:android:40181dbada5df7c5ea68b8",
+        "mobilesdk_app_id": "1:730450509070:android:7636476d082cbb3e0feb5f",
         "android_client_info": {
           "package_name": "com.example.unichat_poojan_project"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "411117759913-b4g81m5ts91mf70levgn04f99ti65r5u.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBkkstHtu_1qbpytyB6Rt_jsnFJO2U_Xuo"
+          "current_key": "AIzaSyCzS4tQVtFnYu6SQ83eLeVfP5nfP-Gc-tA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "411117759913-b4g81m5ts91mf70levgn04f99ti65r5u.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "411117759913-ns2qui09eppjjg5tuj4967g7k54ur628.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.unichatPoojanProject.RunnerTests"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
