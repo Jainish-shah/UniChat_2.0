@@ -44,40 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA17JAWeO9Ch4sgC6HXhFQ83EPV7ati45o',
-    appId: '1:411117759913:web:0857293f3081ba42ea68b8',
-    messagingSenderId: '411117759913',
-    projectId: 'unichat2-c79f7',
-    authDomain: 'unichat2-c79f7.firebaseapp.com',
-    storageBucket: 'unichat2-c79f7.appspot.com',
-    measurementId: 'G-1RGPML2S5Y',
+    apiKey: 'AIzaSyAC7w11UUkz3lmuoITsOwhrMTIMGUOjfRw',
+    appId: '1:730450509070:web:64f484afc80620eb0feb5f',
+    messagingSenderId: '730450509070',
+    projectId: 'softwareengg-2f798',
+    authDomain: 'softwareengg-2f798.firebaseapp.com',
+    storageBucket: 'softwareengg-2f798.appspot.com',
+    measurementId: 'G-XYD8WHDW5X',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBkkstHtu_1qbpytyB6Rt_jsnFJO2U_Xuo',
-    appId: '1:411117759913:android:40181dbada5df7c5ea68b8',
-    messagingSenderId: '411117759913',
-    projectId: 'unichat2-c79f7',
-    storageBucket: 'unichat2-c79f7.appspot.com',
+    apiKey: 'AIzaSyCzS4tQVtFnYu6SQ83eLeVfP5nfP-Gc-tA',
+    appId: '1:730450509070:android:7636476d082cbb3e0feb5f',
+    messagingSenderId: '730450509070',
+    projectId: 'softwareengg-2f798',
+    storageBucket: 'softwareengg-2f798.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA0XXCIuzMBJKpqI0kYB8YgjAa3u-gAd-Y',
-    appId: '1:411117759913:ios:0ddd59f7a92151f0ea68b8',
-    messagingSenderId: '411117759913',
-    projectId: 'unichat2-c79f7',
-    storageBucket: 'unichat2-c79f7.appspot.com',
-    iosClientId: '411117759913-oivnno8fu857nturnopqjv4e5c00rj93.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBcxxTZzHeTzZrfWvxmO37RU3zh6lItyYM',
+    appId: '1:730450509070:ios:11a45e0c7ddf69760feb5f',
+    messagingSenderId: '730450509070',
+    projectId: 'softwareengg-2f798',
+    storageBucket: 'softwareengg-2f798.appspot.com',
     iosBundleId: 'com.example.unichatPoojanProject',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA0XXCIuzMBJKpqI0kYB8YgjAa3u-gAd-Y',
-    appId: '1:411117759913:ios:41b015d690e01232ea68b8',
-    messagingSenderId: '411117759913',
-    projectId: 'unichat2-c79f7',
-    storageBucket: 'unichat2-c79f7.appspot.com',
-    iosClientId: '411117759913-ns2qui09eppjjg5tuj4967g7k54ur628.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBcxxTZzHeTzZrfWvxmO37RU3zh6lItyYM',
+    appId: '1:730450509070:ios:dbb75213be469e610feb5f',
+    messagingSenderId: '730450509070',
+    projectId: 'softwareengg-2f798',
+    storageBucket: 'softwareengg-2f798.appspot.com',
     iosBundleId: 'com.example.unichatPoojanProject.RunnerTests',
   );
 }
