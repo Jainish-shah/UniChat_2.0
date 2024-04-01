@@ -4,18 +4,18 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'discord.dart';
 import 'google_drive.dart';
 import 'sidebar.dart';
-import 'discord_widget.dart';
 
 enum HomePageBody {
   discord,
   portToKf,
   googleDrive,
+  chat,
 }
 
-
 class MainHomePage extends StatefulWidget {
+  final GoogleSignInAccount? googleUser;
 
-  // MainHomePage({Key? key, this.currentUser, required GoogleSignInAccount googleUser}) : super(key: key);
+  MainHomePage({Key? key, this.googleUser}) : super(key: key);
 
   @override
   _MainHomePageState createState() => _MainHomePageState();
@@ -93,7 +93,7 @@ class _MainHomePageState extends State<MainHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomNavBar(),
+      appBar: CustomNavBar(googleUser: widget.googleUser),
       drawer: CustomSidebar(updateBody: _updateBody), // Pass the update function to the sidebar
       body: _getBodyWidget(),
       floatingActionButton: FloatingActionButton(
