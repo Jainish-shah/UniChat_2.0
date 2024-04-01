@@ -225,7 +225,7 @@ class _RegisterSchoolPageState extends State<RegisterSchoolPage> {
     required String adminEmail,
   }) async {
     if (schoolName.isNotEmpty && schoolAddress1.isNotEmpty && city.isNotEmpty && state.isNotEmpty && country.isNotEmpty && zipCode.isNotEmpty && adminFirstName.isNotEmpty && adminLastName.isNotEmpty && adminEmail.isNotEmpty) {
-      final url = 'http://10.252.1.17:3000/api/admin/approvalRequest'; // Replace with your actual server URL
+      final url = 'http://10.252.1.117:3000/api/admin/approvalRequest'; // Replace with your actual server URL
       try {
         final response = await http.put(
           Uri.parse(url),

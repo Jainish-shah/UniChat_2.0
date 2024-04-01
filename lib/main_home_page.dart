@@ -96,16 +96,16 @@ class _MainHomePageState extends State<MainHomePage> {
       appBar: CustomNavBar(googleUser: widget.googleUser),
       drawer: CustomSidebar(updateBody: _updateBody), // Pass the update function to the sidebar
       body: _getBodyWidget(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Assuming _selectedPage is used to determine what project to add
-          // Implement the logic for adding a new project
-          // For now, let's just open the drawer for demonstration
-          _scaffoldKey.currentState?.openDrawer();
-        },
-        child: Icon(Icons.add),
-        tooltip: 'Add Project', // Tooltip for the FAB
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Assuming _selectedPage is used to determine what project to add
+      //     // Implement the logic for adding a new project
+      //     // For now, let's just open the drawer for demonstration
+      //     _scaffoldKey.currentState?.openDrawer();
+      //   },
+      //   child: Icon(Icons.add),
+      //   tooltip: 'Add Project', // Tooltip for the FAB
+      // ),
     );
   }
 }
