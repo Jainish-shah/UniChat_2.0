@@ -150,8 +150,7 @@ class _DiscordWidgetState extends State<DiscordWidget> {
   @override
   Widget build(BuildContext context) {
     // String widgetBotUrl = "https://e.widgetbot.io/channels/${widget.prop}";
-    // String widgetBotUrl = 'https://e.widgetbot.io/channels/${channelId}';
-      String widgetBotUrl = 'https://discord.com/channels/1215824402835574794/1215824404093735028';
+    String widgetBotUrl = 'https://discord.com/channels/1215824402835574794/1215824404093735028';
 
 
     return Scaffold(
