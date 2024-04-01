@@ -58,6 +58,8 @@ dependencies:
   open_file: ^3.3.2
   flutter_launcher_icons: ^0.13.1
   flutter_pdfview: ^1.2.1
+  cloud_firestore: ^4.15.8
+  firebase_database: ^10.4.5
 
 flutter_icons:
   image_path: "assets/app_logo1.png"
