@@ -1,96 +1,82 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:unichat_poojan_project/main_home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'google_drive.dart'; // If you plan to use SVG icons
-
-class CustomSidebar extends StatefulWidget {
-  final Function(HomePageBody) updateBody;
-
-  CustomSidebar({required this.updateBody});
+class ChatPage extends StatefulWidget {
   @override
-  _CustomSidebarState createState() => _CustomSidebarState();
+  _ChatPageState createState() => _ChatPageState();
 }
 
-class _CustomSidebarState extends State<CustomSidebar> {
+class _ChatPageState extends State<ChatPage> {
+  final TextEditingController _controller = TextEditingController();
 
+  Future<void> _sendMessage() async {
+    if (_controller.text.isEmpty) {
+      return;
+    }
+    final messageText = _controller.text;
+    _controller.clear();
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('chats').add({
+        'text': messageText,
+        'createdAt': Timestamp.now(),
+        'userId': user.uid,
+        'userEmail': user.email, // Assuming the user has an email
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Theme data to dynamically change theme properties
-    var currentTheme = Theme.of(context);
-    return Drawer(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween, // To space out the top and bottom sections
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Chat"),
+      ),
+      body: Column(
         children: [
-          Flexible(
-            child: ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "UniChat",
-                    style: TextStyle(
-                      fontFamily: 'Kode Mono',
-                      fontWeight: FontWeight.w300,
-                      fontSize: 24.0,
-                      letterSpacing: 2.0,
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('chats')
+                  .orderBy('createdAt', descending: true)
+                  .snapshots(),
+              builder: (ctx, AsyncSnapshot<QuerySnapshot> chatSnapshot) {
+                if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                final chatDocs = chatSnapshot.data?.docs ?? [];
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: chatDocs.length,
+                  itemBuilder: (ctx, index) => ListTile(
+                    leading: CircleAvatar(
+                      child: Text(chatDocs[index]['userEmail'][0].toUpperCase()),
                     ),
-                    textAlign: TextAlign.center,
+                    title: Text(chatDocs[index]['text']),
+                    subtitle: Text(chatDocs[index]['userEmail']),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: InputDecoration(labelText: 'Send a message...'),
                   ),
                 ),
-                Divider(),
-                ListTile(
-                  leading: Icon(Icons.home, color: Colors.white),
-                  title: Text('Home', style: TextStyle(color: Colors.white)),
-                    onTap: () {
-                      widget.updateBody(HomePageBody.discord); // Use the callback to update the body
-                      Navigator.pop(context);
-                    },
-                ),
-
-
-                ExpansionTile(
-                  leading: SvgPicture.asset('assets/icons/dvr_outlined.svg', color: Colors.white), // Example for using SVG
-                  title: Text('All Projects', style: TextStyle(color: Colors.white)),
-                  children: [
-                    // Dynamic list of projects or other items
-                  ],
-                ),
-                ListTile(
-                  leading: Icon(Icons.flight_takeoff, color: Colors.white), // Example icon for "Port to KF"
-                  title: Text('Port to KF', style: TextStyle(color: Colors.white)),
-                  onTap: () {
-                    // widget.updateBody(HomePageBody.portToKf);
-                    // Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.folder_open, color: Colors.white), // Example icon for "My Google Drive"
-                  title: Text('My Google Drive', style: TextStyle(color: Colors.white)),
-                  onTap: () {
-                    widget.updateBody(HomePageBody.googleDrive);
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => GoogleDrive(), // Navigate to success page
-                    ));
-                  },
+                IconButton(
+                  icon: Icon(Icons.send),
+                  onPressed: _sendMessage,
                 ),
               ],
             ),
-          ),
-          Column(
-            children: [
-              Divider(color: Colors.grey),
-
-// Help & Getting Started List Item
-              ListTile(
-                leading: Icon(Icons.help_outline, color: Colors.blue), // Example icon
-                title: Text('Help & Getting Started', style: TextStyle(color: Colors.blue)),
-                onTap: () {
-                  // Implement what happens when the user taps on "Help & Getting Started"
-                },
-              ),
-            ],
           ),
         ],
       ),
