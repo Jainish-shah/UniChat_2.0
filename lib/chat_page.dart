@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'main_home_page.dart';
+import 'package:unichat_poojan_project/main_home_page.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -25,7 +24,7 @@ class _ChatPageState extends State<ChatPage> {
         'text': messageText,
         'createdAt': Timestamp.now(),
         'userId': user.uid,
-        'userEmail': user.email, // Assuming the user has an email
+        'userEmail': user.email, // User's email is stored for identification
       });
     }
   }
@@ -34,12 +33,10 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chat"),
+        title: Text("Group Chat"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => MainHomePage(  ), // Navigate to success page
-          ))
+          onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainHomePage())),
         ),
       ),
       body: Column(
@@ -63,7 +60,7 @@ class _ChatPageState extends State<ChatPage> {
                       child: Text(chatDocs[index]['userEmail'][0].toUpperCase()),
                     ),
                     title: Text(chatDocs[index]['text']),
-                    subtitle: Text(chatDocs[index]['userEmail']),
+                    subtitle: Text(chatDocs[index]['userEmail']), // Displays the sender's email
                   ),
                 );
               },
