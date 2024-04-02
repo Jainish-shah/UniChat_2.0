@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'main.dart'; // Assuming this is where MyHomePage is defined
 
@@ -15,6 +16,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkFirstSeen();
+  }
+
+  Future<void> checkFirstSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seenOnboarding') ?? false);
+
+    if (!_seen) {
+      print("SEEN NO");
+      await prefs.setBool('seenOnboarding', true);
+    } else {
+      print("SEEN YES");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MyHomePage()),
+      );
+    }
   }
 
   void _onPageChanged(int index) {
@@ -145,7 +168,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onPrimary: Colors.white, // Text color
                 ),
                 onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()),
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 6.0),
