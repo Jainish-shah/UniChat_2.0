@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:unichat_poojan_project/main_home_page.dart';
 
 class ChatPage extends StatefulWidget {
+  final String studentId;
+  ChatPage({Key? key, required this.studentId}) : super(key: key);
+
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -11,32 +14,16 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
 
-  Future<void> _sendMessage() async {
-    if (_controller.text.isEmpty) {
-      return;
-    }
-    final messageText = _controller.text;
-    _controller.clear();
-
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await FirebaseFirestore.instance.collection('chats').add({
-        'text': messageText,
-        'createdAt': Timestamp.now(),
-        'userId': user.uid,
-        'userEmail': user.email, // User's email is stored for identification
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Group Chat"),
+        title: Text("Class Announcement"),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainHomePage())),
+          onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainHomePage(studentId: widget.studentId))),
         ),
       ),
       body: Column(
@@ -55,13 +42,49 @@ class _ChatPageState extends State<ChatPage> {
                 return ListView.builder(
                   reverse: true,
                   itemCount: chatDocs.length,
-                  itemBuilder: (ctx, index) => ListTile(
-                    leading: CircleAvatar(
-                      child: Text(chatDocs[index]['userEmail'][0].toUpperCase()),
-                    ),
-                    title: Text(chatDocs[index]['text']),
-                    subtitle: Text(chatDocs[index]['userEmail']), // Displays the sender's email
-                  ),
+                  itemBuilder: (ctx, index) {
+                    bool isMe = chatDocs[index]['userId'] == currentUser?.uid;
+                    return Row(
+                      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: isMe ? Colors.deepPurple[800] : Colors.black54,
+                            borderRadius: isMe
+                                ? BorderRadius.only(
+                                topLeft: Radius.circular(14),
+                                topRight: Radius.circular(14),
+                                bottomLeft: Radius.circular(14))
+                                : BorderRadius.only(
+                                topLeft: Radius.circular(14),
+                                topRight: Radius.circular(14),
+                                bottomRight: Radius.circular(14)),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 16,
+                          ),
+                          margin: EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 8,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                chatDocs[index]['userEmail'],
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey),
+                              ),
+                              Text(
+                                chatDocs[index]['text'],
+                                style: TextStyle(fontSize: 16, color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 );
               },
             ),
@@ -73,12 +96,29 @@ class _ChatPageState extends State<ChatPage> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: InputDecoration(labelText: 'Send a message...'),
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Send a message...',
+                      labelStyle: TextStyle(color: Colors.white70),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurpleAccent, width: 2),
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple, width: 2),
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
+                      fillColor: Colors.black38,
+                      filled: true,
+                    ),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
+                SizedBox(width: 8),
+                FloatingActionButton(
+                  child: Icon(Icons.send),
                   onPressed: _sendMessage,
+                  backgroundColor: Colors.deepPurple,
+                  elevation: 0,
                 ),
               ],
             ),
