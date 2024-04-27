@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../chat_gpt/constants/api_consts.dart';
 
 class UserAuthenticationService {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  // static const String _baseUrl =
+  //     'https://9023-2603-7080-b1f0-6390-fcf3-a348-dfe3-7430.ngrok-free.app';
 
   Future<Map<String, dynamic>> classifyUser(String email) async {
     final url = Uri.parse('$LOCALHOST/api/sessionSetup/classifyUser');
@@ -16,9 +19,11 @@ class UserAuthenticationService {
       body: jsonEncode({'email': email}),
     );
 
+    // Check the response status and return the JSON body if successful
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
+      // Handle error or throw an exception
       throw Exception('Failed to classify user.');
     }
   }
