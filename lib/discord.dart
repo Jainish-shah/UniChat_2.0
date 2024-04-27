@@ -1,176 +1,68 @@
-// import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-//
-// // Assuming you have a ThemeProvider similar to the context in your React app.
-//
-// class DiscordWidget extends StatelessWidget {
-//   final List<dynamic> props; // Assuming props is a dynamic list as in your React code
-//
-//   DiscordWidget({Key? key, required this.props}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     var theme = Theme.of(context); // Or using a custom ThemeProvider if you have one
-//
-//     if (props.isNotEmpty && props[0] == "noProjectsFound") {
-//       return Center(
-//         child: Text(
-//           'No Projects Found',
-//           style: TextStyle(
-//             color: Colors.white, // Adjust based on your theme
-//             fontFamily: 'Kode Mono',
-//           ),
-//         ),
-//       );
-//     } else if (props.isNotEmpty && props[0] == "noProjectSelected") {
-//       return Column(
-//         children: [
-//           SlideTransition(
-//             position: Tween<Offset>(
-//               begin: Offset(0, -1),
-//               end: Offset.zero,
-//             ).animate(AnimationController(
-//               vsync: NavigatorState(),
-//               duration: const Duration(seconds: 1),
-//             )),
-//             child: Text(
-//               'Select a project to view its discord server',
-//               style: TextStyle(
-//                 fontWeight: FontWeight.bold,
-//                 color: theme.primaryColor, // Adjust your theme colors accordingly
-//                 fontFamily: 'Kode Mono',
-//               ),
-//             ),
-//           ),
-//           Divider(color: theme.dividerColor), // Adjust your theme accordingly
-//           // Assuming props[1] contains a list of projects
-//           Expanded(
-//             child: GridView.builder(
-//               itemCount: props[1].length,
-//               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-//                 crossAxisCount: 3, // Or based on your layout preference
-//               ),
-//               itemBuilder: (context, index) {
-//                 var project = props[1][index];
-//                 return GestureDetector(
-//                   onTap: () async {
-//                     SharedPreferences prefs = await SharedPreferences.getInstance();
-//                     await prefs.setString('discordServerId', project['discordServerId']);
-//                   },
-//                   child: Card(
-//                     color: theme.cardColor, // Adjust your theme colors accordingly
-//                     child: Center(
-//                       child: Text(
-//                         project['projectName'],
-//                         style: TextStyle(fontFamily: 'Kode Mono'),
-//                       ),
-//                     ),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ),
-//         ],
-//       );
-//     } else {
-//       // For displaying the iframe - Note: iframes in Flutter especially on mobile might not work as expected.
-//       // You might need to use a WebView widget from the webview_flutter package.
-//       return Container(
-//         // Placeholder for WebView or another widget that can display the Discord widget
-//       );
-//     }
-//   }
-// }
-
-
-// import 'package:flutter/material.dart';
-// import 'package:webview_flutter/webview_flutter.dart';
-//
-// class DiscordWidget extends StatefulWidget {
-//   @override
-//   _DiscordWidgetState createState() => _DiscordWidgetState();
-// }
-//
-// class _DiscordWidgetState extends State<DiscordWidget> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('WidgetBot'),
-//       ),
-//       body: WebView(
-//         initialUrl: 'https://e.widgetbot.io/channels/${props[0]}', // Replace with your WidgetBot URL
-//         javascriptMode: JavascriptMode.unrestricted, // Enable JavaScript execution
-//         onWebViewCreated: (WebViewController webViewController) {
-//           // You can store the controller to interact with the WebView, if needed.
-//         },
-//         onProgress: (int progress) {
-//           print("WebView is loading (progress : $progress%)");
-//         },
-//         javascriptChannels: <JavascriptChannel>{
-//           // You can add JavaScript channels here if you need to communicate with the WebView.
-//         },
-//         navigationDelegate: (NavigationRequest request) {
-//           // Handle navigation actions, such as opening a new page.
-//           return NavigationDecision.navigate;
-//         },
-//         onPageStarted: (String url) {
-//           print('Page started loading: $url');
-//         },
-//         onPageFinished: (String url) {
-//           print('Page finished loading: $url');
-//         },
-//         gestureNavigationEnabled: true, // Enable or disable gesture navigation.
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:io';
+
+import 'chat_gpt/screens/gpt_screen.dart'; // Import this for Platform checking
 
 class DiscordWidget extends StatefulWidget {
-  // final String prop;
-  //
-  // DiscordWidget({Key? key, required this.prop}) : super(key: key);
+  final String studentId;
+  final String discordServerId;
+  final String id;
 
-  final String channelId;
-
-  // Constructor requires a channelId
-  DiscordWidget({Key? key, required this.channelId}) : super(key: key);
-
+  DiscordWidget({Key? key, required this.discordServerId,required this.id,required this.studentId}) : super(key: key);
 
   @override
   _DiscordWidgetState createState() => _DiscordWidgetState();
 }
 
 class _DiscordWidgetState extends State<DiscordWidget> {
-  late String channelId;
+  late WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize WebView for Android
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // String widgetBotUrl = "https://e.widgetbot.io/channels/${widget.prop}";
-    String widgetBotUrl = 'https://discord.com/channels/1215824402835574794/1215824404093735028';
-
+    String discordUrl =
+        'https://discord.com/channels/${widget.discordServerId}/';
+    print("Loading Discord URL: $discordUrl");
 
     return Scaffold(
-      appBar: AppBar(title: Text('Discord Channel')),
-      body: widget.channelId.isNotEmpty
-          ? WebView(
-        initialUrl: widgetBotUrl,
+      appBar: AppBar(
+        title: Text("Discord Channel"),
+        actions: <Widget>[
+          IconButton(
+            icon: Image.asset("assets/ChatGPT_icon.png"), // Assuming you have this asset
+            onPressed: () {
+              // Ensure you handle what happens when the icon is tapped
+              debugPrint("ChatGPT icon tapped");
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => ChatScreen(id: widget.id,studentId: widget.studentId, discordServerId : widget.discordServerId), // Make sure this points to your chat screen
+              ));
+            },
+          ),
+        ],
+
+      ),
+      body: WebView(
+        initialUrl: discordUrl,
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
-          // Perform initial setup on the webview here
+          _controller = webViewController;
         },
-        onProgress: (int progress) {
-          print("WebView is loading (progress : $progress%)");
+        onPageStarted: (String url) {
+          print('Page started loading: $url');
         },
-      )
-          : Center(
-        child: Text(
-          'No Projects Found',
-          style: TextStyle(color: Colors.white),
-        ),
+        onPageFinished: (String url) {
+          print('Page finished loading: $url');
+        },
+        onWebResourceError: (error) {
+          print('Web resource error: $error');
+        },
       ),
     );
   }
