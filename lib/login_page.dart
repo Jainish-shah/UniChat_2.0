@@ -18,21 +18,48 @@ class _LoginScreenState extends State<LoginScreen> {
       _isSigningIn = true;
     });
 
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+   try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        Fluttertoast.showToast(msg: "Google sign-in was aborted");
+        setState(() {
+          _isSigningIn = false;
+        });
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(credential);
 
-      Navigator.pushReplacement(context as BuildContext, MaterialPageRoute(builder: (context) => MainHomePage(googleUser: googleUser,)));
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final user = userCredential.user;
 
-      // Navigate to your app's main screen upon successful sign-in
-    } catch (e) {
-      // Handle sign-in error
-      // Navigator.pushReplacement(context as BuildContext, MaterialPageRoute(builder: (context) => MainHomePage()));
+      if (user != null) {
+        final authService = UserAuthenticationService();
+        final userInfo = await authService.classifyUser(user.email!);
+
+        if (userInfo['type'] == 'Registered') {
+          if (userInfo['isFirstTimeLogin']) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => loginform(studentId: userInfo['studentId'])));
+          } else {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => MainHomePage(studentId: userInfo['studentId'])));
+          }
+        } else {
+          Fluttertoast.showToast(msg: "User is Not Authorized");
+          await _googleSignIn.signOut();
+        }
+      }
+    } catch (error) {
+      Fluttertoast.showToast(msg: "Sign in failed: $error");
+      // Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => MainHomePage(studentId: "66229420d1498ccc2e429dea"),
+      //         ),
+      //       );
     } finally {
       setState(() {
         _isSigningIn = false;
