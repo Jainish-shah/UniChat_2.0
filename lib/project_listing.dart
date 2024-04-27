@@ -3,7 +3,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 import 'chat_gpt/constants/api_consts.dart';
+import 'discord.dart';
 import 'main_home_page.dart';
 
 class Project {
@@ -43,6 +45,116 @@ Future<List<Project>> fetchProjects(studentId) async {
     return projects;
   } else {
     throw Exception('Failed to load projects');
+  }
+}
+
+// class DiscordDetailPage extends StatelessWidget {
+//   final String projectName;
+//   final String discordServerId;
+//   final String studentId;
+//   final String id;
+//
+//   const DiscordDetailPage({
+//     Key? key,
+//     required this.projectName,
+//     required this.discordServerId,
+//     required this.studentId,
+//     required this.id
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(projectName),
+//       ),
+//       body: GestureDetector(         // need to remove this tap
+//         onTap: () {
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//               builder: (context) => DiscordWidget(
+//                 discordServerId:
+//                     discordServerId,id : id, studentId : studentId// Pass the server ID to the Discord widget
+//               ),
+//             ),
+//           );
+//         },
+//         child: Center(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: <Widget>[
+//               Icon(Icons.touch_app, size: 48.0), // Visual cue for tapping
+//               Text(
+//                 "Tap here to open Discord Server",
+//                 style: TextStyle(fontSize: 16.0),
+//                 textAlign: TextAlign.center,
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class DiscordDetailPage extends StatefulWidget {
+  final String projectName;
+  final String discordServerId;
+  final String studentId;
+  final String id;
+
+  const DiscordDetailPage({
+    Key? key,
+    required this.projectName,
+    required this.discordServerId,
+    required this.studentId,
+    required this.id
+  }) : super(key: key);
+
+  @override
+  _DiscordDetailPageState createState() => _DiscordDetailPageState();
+}
+
+class _DiscordDetailPageState extends State<DiscordDetailPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DiscordWidget(
+            discordServerId: widget.discordServerId,
+            id: widget.id,
+            studentId: widget.studentId,
+          ),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.projectName),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            CircularProgressIndicator(), // Show loading indicator while navigating
+            SizedBox(height: 20),
+            Text(
+              "Loading Discord...",
+              style: TextStyle(fontSize: 16.0),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
