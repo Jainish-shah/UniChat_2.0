@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "730450509070",
+    "project_id": "softwareengg-2f798",
+    "storage_bucket": "softwareengg-2f798.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730450509070:android:7636476d082cbb3e0feb5f",
+        "android_client_info": {
+          "package_name": "com.example.unichat_poojan_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "730450509070-fs7u6u24or9brf5ul5d2trc52brkbs4q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzS4tQVtFnYu6SQ83eLeVfP5nfP-Gc-tA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "730450509070-fs7u6u24or9brf5ul5d2trc52brkbs4q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "730450509070-iali3vc3a5i3brd11c6p1uhpmrsej933.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.unichatPoojanProject.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,12 +1,16 @@
 // import 'dart:convert';
-//
 // import 'package:flutter/material.dart';
 // import 'package:flutter_svg/svg.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:unichat_poojan_project/chat_gpt/constants/api_consts.dart';
+// import 'package:unichat_poojan_project/main_home_page.dart';
+// import 'dart:developer';
+// import 'package:fluttertoast/fluttertoast.dart';
+// import 'Services/UserAuthenticationService.dart';
+// import 'loginform.dart'; // For SVG icons
 // import 'package:http/http.dart' as http;
-// import 'package:unichat_poojan_project/main_home_page.dart'; // For SVG icons
 //
 // class LoginScreen extends StatefulWidget {
 //   @override
@@ -14,9 +18,49 @@
 // }
 //
 // class _LoginScreenState extends State<LoginScreen> {
+//
+//   // Future<void> updatePhotoUrl(String email, String photoUrl) async {
+//   //   String apiUrl = '$LOCALHOST/api/students/updatePhotoUrl';
+//   //
+//   //   try {
+//   //     final response = await http.put(
+//   //       Uri.parse(apiUrl),
+//   //       headers: <String, String>{
+//   //         'Content-Type': 'application/json',
+//   //       },
+//   //       body: jsonEncode({
+//   //         'databasename': "universityatalbanyDB",
+//   //         'studentemail': email,
+//   //         'photoUrl': photoUrl,
+//   //       }),
+//   //     );
+//   //
+//   //     if (response.statusCode == 200) {
+//   //       final data = jsonDecode(response.body);
+//   //       Fluttertoast.showToast(
+//   //         msg: data['message'],
+//   //         backgroundColor: Colors.green,
+//   //         textColor: Colors.white,
+//   //       );
+//   //     } else {
+//   //       Fluttertoast.showToast(
+//   //         msg: "Failed to update photo URL: ${response.body}",
+//   //         backgroundColor: Colors.red,
+//   //         textColor: Colors.white,
+//   //       );
+//   //     }
+//   //   } catch (e) {
+//   //     print(e); // Print the error to the console.
+//   //     Fluttertoast.showToast(
+//   //       msg: "Error updating photo URL: $e",
+//   //       backgroundColor: Colors.red,
+//   //       textColor: Colors.white,
+//   //     );
+//   //   }
+//   // }
+//
 //   bool _isSigningIn = false;
-//
-//
+//   final GoogleSignIn _googleSignIn = GoogleSignIn();
 //
 //   Future<void> _signInWithGoogle() async {
 //     setState(() {
@@ -24,66 +68,91 @@
 //     });
 //
 //     try {
-//       final GoogleSignIn googleSignIn = GoogleSignIn(
-//
-//         scopes: [
-//           'email',
-//           'https://www.googleapis.com/auth/drive.readonly',
-//         ],
-//
-//         clientId: "190196846143-10082f8l8hbnu2knq1ptm5628og0iies.apps.googleusercontent.com",
-//       );
-//       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-//       if (googleUser != null) {
-//         final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
-//         final AuthCredential credential = GoogleAuthProvider.credential(
-//           accessToken: googleAuth?.accessToken,
-//           idToken: googleAuth?.idToken,
+//       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+//       if (googleUser == null) {
+//         setState(() {
+//           _isSigningIn = false;
+//         });
+//         Fluttertoast.showToast(
+//             msg: "Google sign-in was aborted",
+//             toastLength: Toast.LENGTH_LONG,
+//             gravity: ToastGravity.BOTTOM,
+//             timeInSecForIosWeb: 5,
+//             backgroundColor: Colors.red,
+//             textColor: Colors.white,
+//             fontSize: 16.0
 //         );
-//         await FirebaseAuth.instance.signInWithCredential(credential);
-//         List<dynamic>? googleDriveFiles = await fetchGoogleDriveFiles(googleAuth.accessToken);
-//
-//         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainHomePage()));
+//         return; // User cancelled the sign-in process, exit the function.
 //       }
-//     } catch (e) {
-//       // Handle sign-in error properly
-//       print(e); // Consider using a logging package or Flutter's debugPrint
-//       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainHomePage()));
-//       showDialog(
-//         context: context,
-//         builder: (context) => AlertDialog(
-//           title: Text('Sign In Error'),
-//           content: Text('An error occurred while signing in. Please try again.'),
-//           actions: <Widget>[
+//       final GoogleSignInAuthentication googleAuth =
+//       await googleUser.authentication;
 //
-//           ],
-//         ),
+//       final AuthCredential credential = GoogleAuthProvider.credential(
+//         accessToken: googleAuth?.accessToken,
+//         idToken: googleAuth?.idToken,
 //       );
+//       await FirebaseAuth.instance.signInWithCredential(credential);
+//
+//       // Instantiate your user authentication service
+//       final authService = UserAuthenticationService();
+//
+//       // Call your classifyUser function with the user's email
+//       final userInfo = await authService.classifyUser(googleUser.email);
+//
+//       // Check the user type and act accordingly
+//       if (userInfo['type'] == 'Registered') {
+//         if (userInfo['isFirstTimeLogin']) {
+//           // await updatePhotoUrl(googleUser.email, googleUser.photoUrl);
+//           Navigator.pushReplacement(
+//               context, MaterialPageRoute(builder: (context) => loginform(studentId: userInfo['studentId'])));
+//         } else {
+//           // await updatePhotoUrl(googleUser.email, googleUser.photoUrl);
+//           // Navigate to main home page
+//           Navigator.pushReplacement(
+//             context,
+//             MaterialPageRoute(
+//               builder: (context) => MainHomePage(studentId: userInfo['studentId']),
+//             ),
+//           );
+//         }
+//       } else {
+//         // Handle unregistered user case
+//         Fluttertoast.showToast(
+//             msg: "User is Not Authorized",
+//             toastLength: Toast.LENGTH_LONG,
+//             gravity: ToastGravity.BOTTOM,
+//             timeInSecForIosWeb: 5,
+//             backgroundColor: Colors.red,
+//             textColor: Colors.white,
+//             fontSize: 16.0
+//         );
+//         // Sign out from current Google account and allow re-sign in
+//         await _googleSignIn.signOut();
+//       }
+//     } catch (error) {
+//       _showSignInError(context, error.toString());
 //     } finally {
+//       if (!mounted) return;
 //       setState(() {
 //         _isSigningIn = false;
 //       });
 //     }
 //   }
 //
-//   Future<List<dynamic>?> fetchGoogleDriveFiles(String accessToken) async {
-//     final GoogleSignInAccount? googleUser = await GoogleSignIn().signInSilently();
-//     final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
-//
-//     final response = await http.get(
-//       Uri.parse('https://www.googleapis.com/drive/v3/files'),
-//       headers: {
-//         'Authorization': 'Bearer ${googleAuth.accessToken}',
-//       },
+//   void _showSignInError(BuildContext context, String errorMessage) {
+//     showDialog(
+//       context: context,
+//       builder: (context) => AlertDialog(
+//         title: Text('Sign In Error'),
+//         content: Text(errorMessage),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.of(context).pop(),
+//             child: Text('OK'),
+//           ),
+//         ],
+//       ),
 //     );
-//
-//     if (response.statusCode == 200) {
-//       Map<String, dynamic> data = json.decode(response.body);
-//       return data['files'];
-//     } else {
-//       // Handle errors
-//       return null;
-//     }
 //   }
 //
 //   @override
@@ -102,12 +171,13 @@
 //                   height: 300,
 //                 ),
 //               ),
-//               SizedBox(height: 20), // Space between the image and the login button
+//               SizedBox(
+//                   height: 20), // Space between the image and the login button
 //               _isSigningIn
 //                   ? CircularProgressIndicator() // Show a loading indicator during sign-in
 //                   : ElevatedButton.icon(
-//                 icon: SvgPicture.asset(
-//                   'assets/google.svg', // Make sure this SVG is in your assets directory
+//                 icon: Image.asset(
+//                   'assets/google.png', // Make sure this SVG is in your assets directory
 //                   height: 24,
 //                   width: 24,
 //                 ),
@@ -126,13 +196,15 @@
 //     );
 //   }
 // }
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:unichat_poojan_project/main_home_page.dart'; // For SVG icons
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:unichat_poojan_project/main_home_page.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'Services/UserAuthenticationService.dart';
+import 'loginform.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -141,6 +213,32 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isSigningIn = false;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(scopes: ['email', 'profile']);
+
+  Future<void> updatePhotoUrl(String email, String photoUrl) async {
+    String apiUrl = 'https://5dbd-208-125-91-130.ngrok-free.app/api/students/updatePhotoUrl';
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'databasename': "universityatalbanyDB",
+          'studentemail': email,
+          'photoUrl': photoUrl,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('Photo URL updated successfully');
+      } else {
+        print('Failed to update photo URL: ${response.body}');
+      }
+    } catch (e) {
+      print('Error updating photo URL: $e');
+    }
+  }
 
   Future<void> _signInWithGoogle() async {
     setState(() {
@@ -148,20 +246,47 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        Fluttertoast.showToast(msg: "Google sign-in was aborted");
+        setState(() {
+          _isSigningIn = false;
+        });
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(credential);
 
-      Navigator.pushReplacement(context as BuildContext, MaterialPageRoute(builder: (context) => MainHomePage()));
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final user = userCredential.user;
 
-      // Navigate to your app's main screen upon successful sign-in
-    } catch (e) {
-      // Handle sign-in error
-      Navigator.pushReplacement(context as BuildContext, MaterialPageRoute(builder: (context) => MainHomePage()));
+      if (user != null) {
+        final authService = UserAuthenticationService();
+        final userInfo = await authService.classifyUser(user.email!);
+
+        if (userInfo['type'] == 'Registered') {
+          if (userInfo['isFirstTimeLogin']) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => loginform(studentId: userInfo['studentId'])));
+          } else {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => MainHomePage(studentId: userInfo['studentId'])));
+          }
+        } else {
+          Fluttertoast.showToast(msg: "User is Not Authorized");
+          await _googleSignIn.signOut();
+        }
+      }
+    } catch (error) {
+      Fluttertoast.showToast(msg: "Sign in failed: $error");
+      // Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => MainHomePage(studentId: "66229420d1498ccc2e429dea"),
+      //         ),
+      //       );
     } finally {
       setState(() {
         _isSigningIn = false;
@@ -179,27 +304,19 @@ class _LoginScreenState extends State<LoginScreen> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Image.asset(
-                  'assets/loginimage1.png', // Make sure this image is in your assets directory
-                  width: 400,
-                  height: 300,
-                ),
+                child: Image.asset('assets/loginimage1.png', width: 400, height: 300),
               ),
-              SizedBox(height: 20), // Space between the image and the login button
+              SizedBox(height: 20),
               _isSigningIn
-                  ? CircularProgressIndicator() // Show a loading indicator during sign-in
+                  ? CircularProgressIndicator()
                   : ElevatedButton.icon(
-                icon: SvgPicture.asset(
-                  'assets/google_icon.svg', // Make sure this SVG is in your assets directory
-                  height: 24,
-                  width: 24,
-                ),
+                icon: Image.asset('assets/google.png', height: 24, width: 24),
                 label: Text('Sign in with Google'),
                 onPressed: _signInWithGoogle,
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.white, // Button background color
-                  onPrimary: Colors.black, // Button text color
-                  minimumSize: Size(240, 40), // Button size
+                  // primary: Colors.white,
+                  // onPrimary: Colors.black,
+                  minimumSize: Size(240, 40),
                 ),
               ),
             ],

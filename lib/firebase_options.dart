@@ -47,28 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBkkstHtu_1qbpytyB6Rt_jsnFJO2U_Xuo',
-    appId: '1:411117759913:android:40181dbada5df7c5ea68b8',
-    messagingSenderId: '411117759913',
-    projectId: 'unichat2-c79f7',
-    storageBucket: 'unichat2-c79f7.appspot.com',
+    apiKey: 'AIzaSyCzS4tQVtFnYu6SQ83eLeVfP5nfP-Gc-tA',
+    appId: '1:730450509070:android:7636476d082cbb3e0feb5f',
+    messagingSenderId: '730450509070',
+    projectId: 'softwareengg-2f798',
+    storageBucket: 'softwareengg-2f798.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA0XXCIuzMBJKpqI0kYB8YgjAa3u-gAd-Y',
-    appId: '1:411117759913:ios:0ddd59f7a92151f0ea68b8',
-    messagingSenderId: '411117759913',
-    projectId: 'unichat2-c79f7',
-    storageBucket: 'unichat2-c79f7.appspot.com',
+    apiKey: 'AIzaSyBcxxTZzHeTzZrfWvxmO37RU3zh6lItyYM',
+    appId: '1:730450509070:ios:11a45e0c7ddf69760feb5f',
+    messagingSenderId: '730450509070',
+    projectId: 'softwareengg-2f798',
+    storageBucket: 'softwareengg-2f798.appspot.com',
+    androidClientId: '730450509070-a3fb87belhf88n3odlvj8tfsoeionqni.apps.googleusercontent.com',
+    iosClientId: '730450509070-mq7jtgm9n4cl4t2o8bmonvtbojjk2d7v.apps.googleusercontent.com',
     iosBundleId: 'com.example.unichatPoojanProject',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyA0XXCIuzMBJKpqI0kYB8YgjAa3u-gAd-Y',
-    appId: '1:411117759913:ios:41b015d690e01232ea68b8',
-    messagingSenderId: '411117759913',
-    projectId: 'unichat2-c79f7',
-    storageBucket: 'unichat2-c79f7.appspot.com',
+    apiKey: 'AIzaSyBcxxTZzHeTzZrfWvxmO37RU3zh6lItyYM',
+    appId: '1:730450509070:ios:dbb75213be469e610feb5f',
+    messagingSenderId: '730450509070',
+    projectId: 'softwareengg-2f798',
+    storageBucket: 'softwareengg-2f798.appspot.com',
+    androidClientId: '730450509070-a3fb87belhf88n3odlvj8tfsoeionqni.apps.googleusercontent.com',
+    iosClientId: '730450509070-iali3vc3a5i3brd11c6p1uhpmrsej933.apps.googleusercontent.com',
     iosBundleId: 'com.example.unichatPoojanProject.RunnerTests',
   );
 }

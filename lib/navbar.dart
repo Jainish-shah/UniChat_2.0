@@ -1,8 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyNavBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
+    // Obtain the current user
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    String? photoURL = currentUser?.photoURL;
+
     return AppBar(
       title: Text('My Application'),
       actions: <Widget>[
@@ -19,7 +24,7 @@ class MyNavBar extends StatelessWidget implements PreferredSizeWidget {
           },
         ),
         IconButton(
-          icon: Icon(Icons.account_circle),
+          icon: photoURL != null ? CircleAvatar(backgroundImage: NetworkImage(photoURL)) : Icon(Icons.account_circle),
           onPressed: () {
             // Implement user profile functionality
           },
