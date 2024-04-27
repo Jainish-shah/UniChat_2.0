@@ -14,6 +14,24 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
 
+  Future<void> _sendMessage() async {
+    if (_controller.text.isEmpty) {
+      return;
+    }
+    final messageText = _controller.text;
+    _controller.clear();
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance.collection('chats').add({
+        'text': messageText,
+        'createdAt': Timestamp.now(),
+        'userId': user.uid,
+        'userEmail': user.email,
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
