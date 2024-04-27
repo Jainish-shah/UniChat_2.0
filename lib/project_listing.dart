@@ -29,6 +29,23 @@ class Project {
   }
 }
 
+Future<List<Project>> fetchProjects(studentId) async {
+  String databasename = "universityatalbanyDB";
+  final response = await http.get(Uri.parse(
+      '$LOCALHOST/api/students/projects/getStudentProjects?databasename=${databasename}&studentId=${studentId}'));
+
+  if (response.statusCode == 200) {
+    List<Project> projects = [];
+    var jsonData = jsonDecode(response.body);
+    for (var proj in jsonData['projects']) {
+      projects.add(Project.fromJson(proj));
+    }
+    return projects;
+  } else {
+    throw Exception('Failed to load projects');
+  }
+}
+
 class ProjectListingPage extends StatefulWidget {
   final String studentId;
   ProjectListingPage({Key? key, required this.studentId}) : super(key:key);
