@@ -4,9 +4,9 @@ import 'Services/MongoDB_Routines.dart';
 import 'main_home_page.dart';
 
 class RegistrationForm extends StatefulWidget {
-  final User? user;
 
-  const RegistrationForm({Key? key, this.user}) : super(key: key);
+  final String studentId;
+  const RegistrationForm({Key? key, required this.studentId}) : super(key: key);
 
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
@@ -46,7 +46,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   //   _lastName!,
                   // );
                   // Optionally, update AuthContext or perform other actions after registration.
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainHomePage()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainHomePage(studentId: widget.studentId,)));
                 }
               },
               child: Text('Register'),

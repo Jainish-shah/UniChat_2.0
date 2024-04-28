@@ -101,6 +101,70 @@ class _ChatScreenState extends State<ChatScreen> {
     super.dispose();
   }
 
+  List<ChatModel> chatList = [];
+
+  bool isUrl(String text) {
+    // This is a basic pattern and might not cover all valid URL cases.
+    var pattern = r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$';
+    var regExp = RegExp(pattern);
+
+    return regExp.hasMatch(text);
+  }
+
+  bool isImageUrl(String url) {
+    // A basic check for image file extensions in the URL
+    return RegExp(r"\.(jpeg|jpg|gif|png)$", caseSensitive: false).hasMatch(url);
+  }
+  // --------------------working logic -------------
+  // void downloadChatHistory() async {
+  //   // Compile chat data into a text format
+  //   String chatData = chatList.map((chat) => "${chat.chatIndex == 0 ? 'User' : 'Assistant'}: ${chat.msg}").join('\n');
+  //
+  //   // Get temporary directory
+  //   final directory = await getTemporaryDirectory();
+  //   final filePath = '${directory.path}/chat_history.txt';
+  //
+  //   // Write to a text file
+  //   final File file = File(filePath);
+  //   await file.writeAsString(chatData);
+  //
+  //   // Use flutter_file_dialog to offer saving the file
+  //   final params = SaveFileDialogParams(sourceFilePath: filePath);
+  //   final filePathOrCancel = await FlutterFileDialog.saveFile(params: params);
+  //
+  //   if (filePathOrCancel != null) {
+  //     print("Save successful: $filePathOrCancel");
+  //   } else {
+  //     print("Save cancelled or failed.");
+  //   }
+  // }
+  // --------------------working logic -------------
+
+  void downloadChatHistoryAsDoc() async {
+    // Compile chat data into a text format
+    String chatData = chatList.map((chat) => "${chat.chatIndex == 0 ? 'User' : 'Assistant'}: ${chat.msg}").join('\n');
+
+    // Get temporary directory
+    final directory = await getTemporaryDirectory();
+    final filePath = '${directory.path}/chat_history.doc';  // Changed from .txt to .doc
+
+    // Write to a text file with a .doc extension
+    // final File file = File(filePath);
+    // await file.writeAsString(chatData);
+    //
+    // // Optional: Use a file dialog or another method to share the file
+    // print("DOC file saved at $filePath");
+
+    final params = SaveFileDialogParams(sourceFilePath: filePath);
+    final filePathOrCancel = await FlutterFileDialog.saveFile(params: params);
+
+    if (filePathOrCancel != null) {
+      print("Save successful: $filePathOrCancel");
+    } else {
+      print("Save cancelled or failed.");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -358,6 +422,213 @@ class _ChatScreenState extends State<ChatScreen> {
       ),),
     );
   }
+
+  final Dio _dio = Dio();
+
+  Future<String> encodeImage(File image) async {
+    final bytes = await image.readAsBytes();
+    return base64Encode(bytes);
+  }
+
+  Future<String> sendImageToGPT4Vision({
+    required File image,
+    required ModelsProvider modelsProvider,
+    required String text,
+    int maxTokens = 500,
+    String model = "gpt-4-vision-preview",
+  }) async {
+    setState(() {
+      _isTyping = true;
+      chatList.add(ChatModel(msg: "Upload Image", chatIndex: 0, isURL: 0));
+
+      //printChatList(chatList);
+
+      messg = "Upload Image";
+
+      textEditingController.clear();
+      focusNode.unfocus();
+
+    });
+    final String base64Image = await encodeImage(image);
+
+    try {
+      final response = await _dio.post(
+        "$BASE_URL/chat/completions",
+        options: Options(
+          headers: {
+            HttpHeaders.authorizationHeader: 'Bearer $API_Key',
+            HttpHeaders.contentTypeHeader: "application/json",
+          },
+        ),
+        data: jsonEncode({
+          'model': model,
+          'messages': [
+            {
+              'role': 'system',
+              'content': 'You have to give concise and short answers'
+              // 'content': 'You have to match the image with given text and give concise and short answers'
+            },
+            {
+              'role': 'user',
+              'content': [
+                // {
+                //   'type': 'text',
+                //   'text':
+                //       'GPT, your task is to identify plant health issues with precision. Analyze any image of a plant or leaf I provide, and detect all abnormal conditions, whether they are diseases, pests, deficiencies, or decay. Respond strictly with the name of the condition identified, and nothing else—no explanations, no additional text. If a condition is unrecognizable, reply with \'I don\'t know\'. If the image is not plant-related, say \'Please pick another image\'',
+                // },
+                {
+                  'type': 'text',
+                  'text': 'GPT, '+text
+                  // 'text': 'Match the image with text and give the concise and short answers, Text is '+text,
+                },
+                {
+                  'type': 'image_url',
+                  'image_url': {
+                    'url': 'data:image/jpeg;base64,$base64Image',
+                  },
+                },
+              ],
+            },
+          ],
+          'max_tokens': maxTokens,
+        }),
+      );
+
+      final jsonResponse = response.data;
+
+      if (jsonResponse['error'] != null) {
+        throw HttpException(jsonResponse['error']["message"]);
+      }
+      return jsonResponse["choices"][0]["message"]["content"];
+    } catch (e) {
+      setState(() {
+        _isTyping = false;
+      });
+      throw Exception('Error: $e');
+    } finally {
+
+    }
+  }
+
+  void printChatList(List<ChatModel> chatList) {
+    for (ChatModel chatModel in chatList) {
+      print(chatModel.msg);
+      print(isUrl(chatModel.msg));
+      print("**********");
+    }
+  }
+
+  void scrollListToEnd() {
+    _listScrollController.animateTo(
+      _listScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.fastEaseInToSlowEaseOut,
+    );
+  }
+
+  // Ensure this function definition is inside your class or an appropriate scope.
+  Future<void> sendMessageFCT({required ModelsProvider modelsProvider}) async {
+    try {
+      setState(() {
+        _isTyping = true;
+        chatList.add(ChatModel(msg: textEditingController.text, chatIndex: 0, isURL: 0));
+
+        // printChatList(chatList);
+
+        messg = textEditingController.text;
+
+        textEditingController.clear();
+        focusNode.unfocus();
+
+        sendMessageRequest(role: "user", sendMessageText: textEditingController.text);
+
+      });
+      // Assuming ApiService.sendMessage expects a String message and a model ID.
+      chatList.addAll(await ApiService.sendMessage(
+        message: messg,
+        modelId: modelsProvider.currentModel,
+      ));
+
+      sendMessageRequest(role: "assistant", sendMessageText: messg);
+
+      for (ChatModel chat in chatList) {
+        print('-----------------------------------------------------------------------------');
+        print('Message: ${chat.msg}');
+        print('Chat Index: ${chat.chatIndex}');
+        print('Is URL: ${chat.isURL}');
+        print('------------------------------------------------------------------------------');
+      }
+      setState(() {
+        // textEditingController.clear();
+      });
+    } catch (error) {
+      log("error $error");
+    } finally {
+      setState(() {
+        scrollListToEnd();
+        _isTyping = false;
+      });
+    }
+  }
+
+  // Future<void> storeChatMessage(String projectId, String databaseName, List<Map<String, String>> messages) async {
+  //   const String url = 'https://9023-2603-7080-b1f0-6390-fcf3-a348-dfe3-7430.ngrok-free.app/api/chatgpt/storechat';
+  //
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: json.encode({
+  //         'projectID': projectId,
+  //         'databasename': databaseName,
+  //         'messages': messages,
+  //       }),
+  //     );
+  //
+  //     if (response.statusCode != 200) {
+  //       print("Failed to store messages: ${response.body}");
+  //     }
+  //   } catch (e) {
+  //     print("Error storing messages: $e");
+  //   }
+  // }
+  //// ==============================
+  // Future<List<GetChatGptMessagesList>> getChatGptMessagesListAPI() async {
+  //   var url = Uri.parse('$LOCALHOST/api/chatgpt/storechat?projectID=66107b05e3cf7763a806b6b4&databasename=universityatalbanyDB');
+  //   //var url = Uri.parse("https://jsonplaceholder.typicode.com/albums/1/photos");
+  //   final response = await http.get(url, headers: {"Content-Type": "application/json"});
+  //   final result = jsonDecode(response.body);
+  //   final List body = result['chatgptmessages'];
+  //   print("Messages list Count :: "+body.length.toString());
+  //   List<GetChatGptMessagesList> listChatMessages = body.map((e) => GetChatGptMessagesList.fromJson(e)).toList();
+  //   for(int i=0; i<listChatMessages.length; i++) {
+  //     chatList.add(ChatModel(msg: listChatMessages[i].content!, chatIndex: listChatMessages[i].role == "user" ? 0 : 1, isURL: 0));
+  //     setState(() {
+  //       // scrollListToEnd();
+  //       // _isTyping = false;
+  //     });
+  //   }
+  //   return body.map((e) => GetChatGptMessagesList.fromJson(e)).toList();
+  // }
+  //// ==============================
+
+  Future<List<GetChatGptMessagesList>> getChatGptMessagesListAPI() async {
+    var url = Uri.parse('$LOCALHOST/api/chatgpt/storechat?projectID=${widget.id}&databasename=universityatalbanyDB');
+    final response = await http.get(url, headers: {"Content-Type": "application/json"});
+    final result = jsonDecode(response.body);
+    final List body = result['chatgptmessages'];
+    print("Messages list Count :: "+body.length.toString());
+    List<GetChatGptMessagesList> listChatMessages = body.map((e) => GetChatGptMessagesList.fromJson(e)).toList();
+    for(int i=0; i<listChatMessages.length; i++) {
+      chatList.add(ChatModel(msg: listChatMessages[i].content!, chatIndex: listChatMessages[i].role == "user" ? 0 : 1, isURL: 0));
+      setState(() {
+        scrollListToEnd();
+        _isTyping = false;
+      });
+    }
+    return listChatMessages;
+  }
+
 
   Future<void> sendMessageRequest( {required String role,
     required String sendMessageText,

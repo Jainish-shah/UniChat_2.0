@@ -164,8 +164,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: const EdgeInsets.only(bottom: 10.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue, // Button color
-                  onPrimary: Colors.white, // Text color
+                  // primary: Colors.blue, // Button color
+                  // onPrimary: Colors.white, // Text color
                 ),
                 onPressed: () {
                   Navigator.pushReplacement(

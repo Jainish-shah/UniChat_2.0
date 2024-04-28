@@ -39,8 +39,8 @@ class RegistrationSuccessPage extends StatelessWidget {
               ),
               child: Text('GO BACK'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                onPrimary: Colors.deepPurple,
+                // primary: Colors.white,
+                // onPrimary: Colors.deepPurple,
                 padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               ),
             ),
