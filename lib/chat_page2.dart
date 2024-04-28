@@ -73,6 +73,106 @@ Future<List<Project>> fetchProjects(studentId) async {
   }
 }
 
+class _ChatPage2State extends State<ChatPage2> {
+  late Future<List<Project>> futureProjects;
+
+  @override
+  void initState() {
+    super.initState();
+    futureProjects = fetchProjects(widget.studentId);
+  }
+  String? selectedProjectId;
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Project Chat'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => MainHomePage(studentId: widget.studentId), // Navigate to success page
+            ));
+          },
+        ),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child:  FutureBuilder<List<Project>>(
+              future: futureProjects,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: SpinKitFoldingCube(color: Colors.blue, size: 50.0),
+                  );
+                } else if (snapshot.hasError) {
+                  // return Text("Error: ${snapshot.error}");
+                  return Text("No projects found !!!");
+                }
+
+                return ListView.builder(
+                  itemCount: snapshot.data?.length ?? 0,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  itemBuilder: (context, index) {
+                    Project project = snapshot.data![index];
+                    return ListTile(
+                      title: Text(project.projectName!),
+                      subtitle: Text(project.projectDescription!),
+                      onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => ChatMessage(
+                        //       projectName: project.projectName,
+                        //       studentId: widget.studentId,
+                        //       projectID: project.id
+                        //     ),
+                        //   ),
+                        // );
+
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => ProjectChatHistoryScreen(
+                        //         studentId: widget.studentId,
+                        //       projectName: project.projectName,
+                        //       projectId: project.id,
+                        //     ),
+                        //   ),
+                        // );
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProjectWiseStudentListScreen(
+                              studentId: widget.studentId,
+                              projectName: project.projectName!,
+                              projectId: project.id!,
+                              studentIds: project.studentIds!,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          // Expanded(
+          //   flex: 2,
+          //   child: selectedProjectId != null ? ChatMessages(projectId: selectedProjectId!) : Center(child: Text('Select a project')),
+          // ),
+        ],
+      ),
+    );
+  }
+}
+
 // Placeholder widget for the chat messages, replace with your actual chat UI
 class ChatMessages extends StatelessWidget {
   final String projectId;
