@@ -206,22 +206,38 @@ class _ProjectListingPageState extends State<ProjectListingPage> {
             itemCount: snapshot.data?.length ?? 0,
             itemBuilder: (context, index) {
               Project project = snapshot.data![index];
-              return ListTile(
-                title: Text(project.projectName),
-                subtitle: Text(project.projectDescription),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DiscordDetailPage(
-                        projectName: project.projectName,
-                        id: project.id,
-                        studentId: widget.studentId,
-                        discordServerId: project.discordServerId,
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
                       ),
-                    ),
-                  );
-                },
+                    ],
+                  ),
+                  child: ListTile(
+                    title: Text(project.projectName),
+                    subtitle: Text(project.projectDescription),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DiscordDetailPage(
+                            projectName: project.projectName,
+                            id: project.id,
+                            studentId: widget.studentId,
+                            discordServerId: project.discordServerId,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               );
             },
           );
