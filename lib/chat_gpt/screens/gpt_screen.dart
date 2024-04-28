@@ -30,7 +30,66 @@ import '../services/api_service.dart';
 import '../services/assets_manager.dart';
 import '../services/services.dart';
 
+
+class ChatScreen extends StatefulWidget {
+  final String studentId;
+  final String id;
+  final String discordServerId;
+  ChatScreen({Key?  key,required this.studentId,required this.id,required this.discordServerId}) : super (key: key);
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class GetChatGptMessagesList {
+  final String role;
+  final String content;
+
+  GetChatGptMessagesList({required this.role, required this.content});
+
+  factory GetChatGptMessagesList.fromJson(Map<String, dynamic> json) {
+    return GetChatGptMessagesList(
+      role: json['role'],
+      content: json['content'],
+    );
+  }
+}
+
+
 class _ChatScreenState extends State<ChatScreen> {
+
+
+  bool _isTyping = false;
+  String databasename = "universityatalbanyDB";
+
+  late TextEditingController textEditingController;
+  TextEditingController imageTextController = TextEditingController(text: "");
+  late FocusNode focusNode;
+  late ScrollController _listScrollController;
+  late String messg;
+  late String temp;
+
+  @override
+  void initState() {
+    _listScrollController = ScrollController();
+    textEditingController = TextEditingController();
+    focusNode = FocusNode();
+
+    //sendMessageRequest(role: "user", sendMessageText: "Testing with Chat GPT Sync");
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      getChatGptMessagesListAPI();
+    });
+
+    // List<GetChatGptMessagesList> listChatMessages = await getChatGptMessagesListAPI();
+    // for(int i=0; i<listChatMessages.length; i++) {
+    //   chatList.add(ChatModel(msg: listChatMessages[i].content!, chatIndex: listChatMessages[i].role == "user" ? 0 : 1, isURL: 0));
+    //   setState(() {
+    //     scrollListToEnd();
+    //     // _isTyping = false;
+    //   });
+    // }
+
+
     super.initState();
   }
 
@@ -179,6 +238,74 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+
+  void _showImageSelectionDialog(ModelsProvider modelsProvider) {
+    showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        //content: Text('Choose image source'),
+        alignment: Alignment.center,
+        title: Text("Choose image selection option", ),
+        actions: [
+          ElevatedButton(
+            child: Text('Camera'),
+            onPressed: () {
+              Navigator.pop(context);
+              _uploadImageFromCamera(modelsProvider);
+            },
+          ),
+          ElevatedButton(
+            child: Text('Gallery'),
+            onPressed: () {
+              Navigator.pop(context);
+              _uploadImageFromGallery(modelsProvider);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _uploadImageFromCamera(ModelsProvider modelsProvider) async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.camera);
+
+    if (pickedImage != null) {
+      final path = pickedImage.path;
+
+      // String response = await sendImageToGPT4Vision(image: File(path), modelsProvider: modelsProvider);
+      // print("RESPONSE :: "+response);
+      //
+      // chatList.add(ChatModel(msg: response, chatIndex: 1, isURL: 0));
+      // setState(() {
+      //   scrollListToEnd();
+      //   _isTyping = false;
+      // });
+
+      _showAddTextDialog(path, modelsProvider);
+    }
+  }
+
+  Future<void> _uploadImageFromGallery(ModelsProvider modelsProvider) async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      final path = pickedImage.path;
+
+      // String response = await sendImageToGPT4Vision(image: File(path), modelsProvider: modelsProvider);
+      // print("RESPONSE :: "+response);
+      //
+      // chatList.add(ChatModel(msg: response, chatIndex: 1, isURL: 0));
+      // setState(() {
+      //   scrollListToEnd();
+      //   _isTyping = false;
+      // });
+
+      _showAddTextDialog(path, modelsProvider);
+    }
+  }
+
   _showAddTextDialog(String path, ModelsProvider modelsProvider) async {
     setState(() {
       imageTextController.text = "";
@@ -230,5 +357,158 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),),
     );
+  }
+
+  Future<void> sendMessageRequest( {required String role,
+    required String sendMessageText,
+  }) async {
+    if (sendMessageText.isNotEmpty) {
+      final url = '$LOCALHOST/api/chatgpt/storechat'; // Replace with your actual server URL
+      print('API request URL : $url');
+      try {
+        Map messages = {
+          "role": role,
+          "content": sendMessageText
+        };
+
+        List<PostChatModel> listPostChat = <PostChatModel>[];
+        for(int i=0; i<chatList.length; i++) {
+          PostChatModel postChatModel = PostChatModel(content: chatList[i].msg, role: chatList[i].chatIndex == 0 ? "user" : "assistant");
+          listPostChat.add(postChatModel);
+        }
+        PostChatModel postChatModel = PostChatModel(content: sendMessageText, role: role);
+        listPostChat.add(postChatModel);
+        final response = await http.post(
+          Uri.parse(url),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: json.encode({
+            'projectID': widget.id,
+            'databasename': databasename,
+            'messages': listPostChat/*[
+              {
+                "role": "user",
+                "content": "Test with GPT 11"
+              },
+              {
+                "role": "assistant",
+                "content": "Test with GPT 22"
+              },
+              {
+                "role": "user",
+                "content": "Test with GPT 33"
+              },
+              {
+                "role": "assistant",
+                "content": "Test with GPT 44"
+              },
+              {
+                "role": "user",
+                "content": "Test with GPT 55"
+              },
+              {
+                "role": "user",
+                "content": "Test with GPT 66"
+              },
+              {
+                "role": "assistant",
+                "content": "Test with GPT 77"
+              },
+              {
+                "role": "assistant",
+                "content": "Test with GPT 88"
+              }
+            ]*/
+          }),
+        );
+
+        String request = json.encode({
+          'projectID': widget.id,
+          'databasename': databasename,
+          'messages': listPostChat
+        });
+
+        print("API Request :: "+request);
+
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+
+        if (response.statusCode == 200) {
+          // Success response handling
+          // Navigator.of(context).pushReplacement(MaterialPageRoute(
+          //   builder: (context) => RegistrationSuccessPage(), // Navigate to success page
+          // ));
+          final result = jsonDecode(response.body);
+          // EasyLoading.showSuccess(result['message']);
+          // _controller.text = "";
+          setState(() {
+
+            scrollListToEnd();
+          });
+        } else {
+          // Server error handling
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Error'),
+              content: Text('Registration Failed: ${response.body}'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('OK'),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          );
+        }
+      } catch (e) {
+        // Error handling
+        print(e.toString());
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('An error occurred: $e'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      // Validation failure handling
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Please enter text to send message'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+}
+
+class _SystemPadding extends StatelessWidget {
+  final Widget? child;
+
+  _SystemPadding({Key? key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    return new AnimatedContainer(
+        padding: mediaQuery.viewInsets,
+        duration: const Duration(milliseconds: 300),
+        child: child);
   }
 }
