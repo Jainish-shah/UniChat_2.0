@@ -6,6 +6,7 @@ import '../chat_gpt/constants/api_consts.dart';
 
 class UserAuthenticationService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  // Replace with your actual server API endpoint URL
   // static const String _baseUrl =
   //     'https://9023-2603-7080-b1f0-6390-fcf3-a348-dfe3-7430.ngrok-free.app';
 

@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:unichat_poojan_project/chat_page.dart';
+import 'package:unichat_poojan_project/chat_page2.dart';
 import 'package:unichat_poojan_project/home_navbar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:unichat_poojan_project/project_listing.dart';
 import 'discord.dart';
 import 'google_drive.dart';
 import 'sidebar.dart';
 
 enum HomePageBody {
-  discord,
+  MainHomePage,
   portToKf,
   googleDrive,
   chat,
+  chat2,
 }
 
 class MainHomePage extends StatefulWidget {
-  final GoogleSignInAccount? googleUser;
+  final String studentId;
 
-  MainHomePage({Key? key, this.googleUser}) : super(key: key);
+  MainHomePage({Key? key, required this.studentId,}) : super(key: key);
 
   @override
   _MainHomePageState createState() => _MainHomePageState();
@@ -35,7 +39,7 @@ class _MainHomePageState extends State<MainHomePage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  HomePageBody _selectedPage = HomePageBody.discord;
+  HomePageBody _selectedPage = HomePageBody.MainHomePage;
   String _channelId = "0"; // Set the default or fetch dynamically
 
   void _updateBody(HomePageBody selectedPage) {
@@ -81,9 +85,16 @@ class _MainHomePageState extends State<MainHomePage> {
 
   Widget _getBodyWidget() {
     switch (_selectedPage) {
-      case HomePageBody.discord:
-        return DiscordWidget(channelId: _channelId);
-    // Add cases for other pages...
+      case HomePageBody.MainHomePage:
+        return ProjectListingPage(studentId: widget.studentId);
+      case HomePageBody.chat2:
+        return ChatPage2(studentId: widget.studentId);
+      case HomePageBody.googleDrive:
+         return GoogleDrive(studentId: widget.studentId);
+      case HomePageBody.chat :
+         return ChatPage(studentId: widget.studentId);
+      case HomePageBody.chat2 :
+         return ChatPage2(studentId: widget.studentId);
       default:
         return Center(child: Text('No Project, Add project +'));
     }
@@ -93,8 +104,8 @@ class _MainHomePageState extends State<MainHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: CustomNavBar(googleUser: widget.googleUser),
-      drawer: CustomSidebar(updateBody: _updateBody), // Pass the update function to the sidebar
+      appBar: CustomNavBar(studentId: widget.studentId),
+      drawer: CustomSidebar(updateBody: _updateBody, studentId: widget.studentId), // Pass the update function to the sidebar
       body: _getBodyWidget(),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () {

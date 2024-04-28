@@ -42,6 +42,21 @@ class Students {
 }
 
 class _ChatPage2State extends State<ProjectWiseStudentListScreen> {
+  late Future<List<Students>> futureStudents;
+  List<Students> listStudentData = <Students>[];
+
+  @override
+  void initState() {
+    super.initState();
+
+    for(int i=0; i<widget.studentIds.length; i++) {
+      fetchStudentDetails(widget.studentIds[i]);
+    }
+
+  }
+  String? selectedProjectId;
+
+
 
   @override
   Widget build(BuildContext context) {

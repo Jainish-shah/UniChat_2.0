@@ -1,13 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/io_client.dart';
+import 'package:provider/provider.dart';
+import 'package:unichat_poojan_project/chat_gpt/provider/models_provider.dart';
 import 'package:unichat_poojan_project/splash_page.dart';
 import 'firebase_options.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 import 'instructor_login_page.dart';
 import 'school_registration_page.dart';
-
 
 
 import 'dart:io';
@@ -22,11 +25,6 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
-// void main() {
-//
-//   runApp(MyApp());
-// }
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -36,26 +34,36 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.dark,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.black.withOpacity(0.1),
-        ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Colors.black.withOpacity(0.1),
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey,
-        ),
-      ),
-      themeMode: ThemeMode.dark,
-      home: splash_page(),
-      // home: MyHomePage(),
+
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ModelsProvider(),
+          ),
+        ],
+        child: MaterialApp(
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            brightness: Brightness.light,
+          ),
+          darkTheme: ThemeData(
+            primarySwatch: Colors.blue,
+            brightness: Brightness.dark,
+            appBarTheme: AppBarTheme(
+              backgroundColor: Colors.black.withOpacity(0.1),
+            ),
+            bottomNavigationBarTheme: BottomNavigationBarThemeData(
+              backgroundColor: Colors.black.withOpacity(0.1),
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.grey,
+            ),
+          ),
+          themeMode: ThemeMode.dark,
+          debugShowCheckedModeBanner: false,
+          home: splash_page(),
+          builder: EasyLoading.init(),
+          // home: MyHomePage(),
+        )
     );
   }
 }
@@ -74,7 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           bottom: TabBar(
             tabs: [
-              // Tab(icon: Icon(Icons.home), text: 'Home'),
               Tab(icon: Icon(Icons.login), text: 'Login'),
               Tab(icon: Icon(Icons.school), text: 'Instructor Login'),
               Tab(icon: Icon(Icons.app_registration), text: 'School Registration'),
@@ -83,7 +90,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: TabBarView(
           children: [
-            // HomePage(),
             LoginScreen(),
             InstructorLoginPage(),
             RegisterSchoolPage(),
