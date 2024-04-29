@@ -39,109 +39,130 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Class Announcement"),
+        backgroundColor: Color(0xFF120136), // Adjusted to match the darker shade of the background
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainHomePage(studentId: widget.studentId))),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => MainHomePage(studentId: widget.studentId)
+            ),
+          ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('chats')
-                  .orderBy('createdAt', descending: true)
-                  .snapshots(),
-              builder: (ctx, AsyncSnapshot<QuerySnapshot> chatSnapshot) {
-                if (chatSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                final chatDocs = chatSnapshot.data?.docs ?? [];
-                return ListView.builder(
-                  reverse: true,
-                  itemCount: chatDocs.length,
-                  itemBuilder: (ctx, index) {
-                    bool isMe = chatDocs[index]['userId'] == currentUser?.uid;
-                    return Row(
-                      mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: isMe ? Colors.deepPurple[800] : Colors.black54,
-                            borderRadius: isMe
-                                ? BorderRadius.only(
-                                topLeft: Radius.circular(14),
-                                topRight: Radius.circular(14),
-                                bottomLeft: Radius.circular(14))
-                                : BorderRadius.only(
-                                topLeft: Radius.circular(14),
-                                topRight: Radius.circular(14),
-                                bottomRight: Radius.circular(14)),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 16,
-                          ),
-                          margin: EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 8,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                chatDocs[index]['userEmail'],
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey),
-                              ),
-                              Text(
-                                chatDocs[index]['text'],
-                                style: TextStyle(fontSize: 16, color: Colors.white),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF16043F), // Darker shade at the top
+              Color(0xFF0C0101), // Lighter shade at the bottom
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Send a message...',
-                      labelStyle: TextStyle(color: Colors.white70),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.deepPurpleAccent, width: 2),
-                        borderRadius: BorderRadius.circular(25.0),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('chats')
+                    .orderBy('createdAt', descending: true)
+                    .snapshots(),
+                builder: (ctx, AsyncSnapshot<QuerySnapshot> chatSnapshot) {
+                  if (chatSnapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  final chatDocs = chatSnapshot.data?.docs ?? [];
+                  return ListView.builder(
+                    reverse: true,
+                    itemCount: chatDocs.length,
+                    itemBuilder: (ctx, index) {
+                      bool isMe = chatDocs[index]['userId'] == currentUser?.uid;
+                      return Row(
+                        mainAxisAlignment:
+                        isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: isMe ? Colors.deepPurple[800] : Colors.grey[400],
+                              borderRadius: isMe
+                                  ? BorderRadius.only(
+                                  topLeft: Radius.circular(14),
+                                  topRight: Radius.circular(14),
+                                  bottomLeft: Radius.circular(14))
+                                  : BorderRadius.only(
+                                  topLeft: Radius.circular(14),
+                                  topRight: Radius.circular(14),
+                                  bottomRight: Radius.circular(14)),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 16,
+                            ),
+                            margin: EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 8,
+                            ),
+                            child: Column(
+                              crossAxisAlignment:
+                              isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  chatDocs[index]['userEmail'],
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 12, color: isMe ? Colors.grey[300] : Colors.grey[900]),
+                                ),
+                                Text(
+                                  chatDocs[index]['text'],
+                                  style: TextStyle(fontSize: 16, color: isMe ? Colors.white : Colors.grey[800]),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      decoration: InputDecoration(
+                        labelText: 'Send a message...',
+                        labelStyle: TextStyle(color: Colors.white70),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white54, width: 2),
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white, width: 2),
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
+                        fillColor: Colors.black38,
+                        filled: true,
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.deepPurple, width: 2),
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                      fillColor: Colors.black38,
-                      filled: true,
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
-                ),
-                SizedBox(width: 8),
-                FloatingActionButton(
-                  child: Icon(Icons.send),
-                  onPressed: _sendMessage,
-                  backgroundColor: Colors.deepPurple,
-                  elevation: 0,
-                ),
-              ],
+                  SizedBox(width: 8),
+                  FloatingActionButton(
+                    child: Icon(Icons.send, color: Colors.white),
+                    onPressed: _sendMessage,
+                    backgroundColor: Colors.deepPurple[300],
+                    elevation: 0,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
