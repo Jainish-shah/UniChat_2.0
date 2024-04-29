@@ -27,8 +27,20 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile Page'),
+        backgroundColor: Color(0xFF120136), // Adjusted to match the darker shade of the background
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF16043F), // Darker shade at the top
+              Color(0xFF0C0101), // Lighter shade at the bottom
+            ],
+          ),
+        ),
+        child: FutureBuilder<Map<String, dynamic>>(
           future: studentData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -37,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
               return Center(child: Text("Error: ${snapshot.error}"));
             }
 
-            var user = snapshot.data?['studentData'][0];  // Assuming 'studentData' is an array
+            var user = snapshot.data?['studentData'][0]; // Assuming 'studentData' is an array
 
             return Center(
               child: Column(
@@ -49,20 +61,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 20),
                   Card(
+                    color: Colors.white.withOpacity(0.3), // Semi-transparent card to match the background
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
                           ListTile(
-                            leading: const Icon(Icons.person),
-                            title: Text('Name: ${user?['name'] ?? 'Not Available'}'),
+                            leading: const Icon(Icons.person, color: Colors.white),
+                            title: Text('Name: ${user?['name'] ?? 'Not Available'}', style: TextStyle(color: Colors.white)),
                           ),
                           ListTile(
-                            leading: const Icon(Icons.email),
-                            title: Text('Email: ${user?['email'] ?? 'Not Available'}'),
+                            leading: const Icon(Icons.email, color: Colors.white),
+                            title: Text('Email: ${user?['email'] ?? 'Not Available'}', style: TextStyle(color: Colors.white)),
                           ),
-                          // Assuming you have a way to fetch Discord ID or any other data
+                          // Add more ListTiles for other information as needed
                         ],
                       ),
                     ),
@@ -70,7 +83,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             );
-          }
+          },
+        ),
       ),
     );
   }
