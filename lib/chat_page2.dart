@@ -89,85 +89,87 @@ class _ChatPage2State extends State<ChatPage2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Project Chat'),
+        title: Text('Project Chat', style: TextStyle(color: Colors.white)), // Adjust text color for visibility
+        backgroundColor: Colors.transparent, // Makes AppBar transparent
+        elevation: 0, // Removes shadow
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: Colors.white), // Adjust icon color for visibility
           onPressed: () {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => MainHomePage(studentId: widget.studentId), // Navigate to success page
+              builder: (context) => MainHomePage(studentId: widget.studentId),
             ));
           },
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child:  FutureBuilder<List<Project>>(
-              future: futureProjects,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: SpinKitFoldingCube(color: Colors.blue, size: 50.0),
-                  );
-                } else if (snapshot.hasError) {
-                  // return Text("Error: ${snapshot.error}");
-                  return Text("No projects found !!!");
-                }
-
-                return ListView.builder(
-                  itemCount: snapshot.data?.length ?? 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                  itemBuilder: (context, index) {
-                    Project project = snapshot.data![index];
-                    return ListTile(
-                      title: Text(project.projectName!),
-                      subtitle: Text(project.projectDescription!),
-                      onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ChatMessage(
-                        //       projectName: project.projectName,
-                        //       studentId: widget.studentId,
-                        //       projectID: project.id
-                        //     ),
-                        //   ),
-                        // );
-
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ProjectChatHistoryScreen(
-                        //         studentId: widget.studentId,
-                        //       projectName: project.projectName,
-                        //       projectId: project.id,
-                        //     ),
-                        //   ),
-                        // );
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProjectWiseStudentListScreen(
-                              studentId: widget.studentId,
-                              projectName: project.projectName!,
-                              projectId: project.id!,
-                              studentIds: project.studentIds!,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF16043F), // Darker shade at the top
+              Color(0xFF0C0101), // Lighter shade at the bottom
+            ],
           ),
-          // Expanded(
-          //   flex: 2,
-          //   child: selectedProjectId != null ? ChatMessages(projectId: selectedProjectId!) : Center(child: Text('Select a project')),
-          // ),
-        ],
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: FutureBuilder<List<Project>>(
+                future: futureProjects,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: SpinKitFoldingCube(color: Colors.blue, size: 50.0),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("No projects found !!!");
+                  }
+
+                  return ListView.builder(
+                    itemCount: snapshot.data?.length ?? 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    itemBuilder: (context, index) {
+                      Project project = snapshot.data![index];
+                      return Container(
+                        margin: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.black, // Background color of container
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 1,
+                              blurRadius: 6,
+                              offset: Offset(0, 3), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Text(project.projectName!),
+                          subtitle: Text(project.projectDescription!),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ProjectWiseStudentListScreen(
+                                  studentId: widget.studentId,
+                                  projectName: project.projectName!,
+                                  projectId: project.id!,
+                                  studentIds: project.studentIds!,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

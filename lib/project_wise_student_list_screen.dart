@@ -18,7 +18,7 @@ class ProjectWiseStudentListScreen extends StatefulWidget {
   final String projectName;
   final String projectId;
   ProjectWiseStudentListScreen({Key? key, required this.studentId, required this.studentIds,
-  required this.projectId, required this.projectName}) : super(key: key);
+    required this.projectId, required this.projectName}) : super(key: key);
 
   @override
   _ChatPage2State createState() => _ChatPage2State();
@@ -27,16 +27,19 @@ class ProjectWiseStudentListScreen extends StatefulWidget {
 class Students {
   final String id;
   final String name;
+  final String photoUrl;
 
   Students({
     required this.id,
     required this.name,
+    this.photoUrl = '',
   });
 
   factory Students.fromJson(Map<String, dynamic> json) {
     return Students(
       id: json['_id'],
       name: json['name'],
+      photoUrl: json['photoUrl'],
     );
   }
 }
@@ -64,88 +67,66 @@ class _ChatPage2State extends State<ProjectWiseStudentListScreen> {
       appBar: AppBar(
         title: Text('Student List'),
       ),
-      body: Column(
-        children: [
-          // Expanded(
-          //   child:  FutureBuilder<List<Students>>(
-          //     future: futureStudents,
-          //     builder: (context, snapshot) {
-          //       if (snapshot.connectionState == ConnectionState.waiting) {
-          //         return Center(
-          //           child: SpinKitFoldingCube(color: Colors.blue, size: 50.0),
-          //         );
-          //       } else if (snapshot.hasError) {
-          //         // return Text("Error: ${snapshot.error}");
-          //         return Text("No projects found !!!");
-          //       }
-          //
-          //       return ListView.builder(
-          //         itemCount: snapshot.data?.length ?? 0,
-          //         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          //         itemBuilder: (context, index) {
-          //           Students project = snapshot.data![index];
-          //           return InkWell(
-          //             onTap: () {
-          //               Navigator.push(
-          //                 context,
-          //                 MaterialPageRoute(
-          //                   builder: (context) => ProjectChatHistoryScreen(
-          //                     studentId: widget.studentId,
-          //                     projectName: widget.projectName,
-          //                     projectId: widget.projectId,
-          //                   ),
-          //                 ),
-          //               );
-          //             },
-          //             child: Container(
-          //               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          //               child: Column(
-          //                 children: [
-          //                   Text(project.name, style: TextStyle(fontSize: 16, color: Colors.white),)
-          //                 ],
-          //               ),
-          //             ),
-          //           );
-          //         },
-          //       );
-          //     },
-          //   ),
-          // ),
-
-          Expanded(
-            child:  ListView.builder(
-              itemCount: listStudentData.length ?? 0,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              itemBuilder: (context, index) {
-                // Students project = snapshot.data![index];
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProjectChatHistoryScreen(
-                          studentId: widget.studentId ,
-                          projectName: widget.projectName,
-                          projectId: widget.projectId,
-                          studentName: listStudentData[index].name,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: Column(
-                      children: [
-                        Text(listStudentData[index].name, style: TextStyle(fontSize: 16, color: Colors.white),),
-                        const Divider(),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            )
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF16043F), // Darker shade at the top
+              Color(0xFF0C0101), // Lighter shade at the bottom
+            ],
           ),
-        ],
+        ),
+        child: ListView.builder(
+          itemCount: listStudentData.length,
+          itemBuilder: (context, index) {
+            var photoUrl = listStudentData[index].photoUrl;
+            ImageProvider? imageProvider = (photoUrl.isNotEmpty
+                ? NetworkImage(photoUrl)
+                : AssetImage('assets/default_profile.png')) as ImageProvider<Object>?; // Default image path in assets
+
+            return Container(
+              margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1), // Slight white with opacity
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: imageProvider,
+                  radius: 30,
+                  backgroundColor: Colors.transparent,
+                ),
+                title: Text(
+                  listStudentData[index].name,
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProjectChatHistoryScreen(
+                        studentId: widget.studentId,
+                        projectName: widget.projectName,
+                        projectId: widget.projectId,
+                        studentName: listStudentData[index].name,
+                      ),
+                    ),
+                  );
+                },
+                contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                tileColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
