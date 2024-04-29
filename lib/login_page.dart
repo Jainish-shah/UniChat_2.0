@@ -297,31 +297,95 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Image.asset('assets/loginimage1.png', width: 400, height: 300),
-              ),
-              SizedBox(height: 20),
-              _isSigningIn
-                  ? CircularProgressIndicator()
-                  : ElevatedButton.icon(
-                icon: Image.asset('assets/google.png', height: 24, width: 24),
-                label: Text('Sign in with Google'),
-                onPressed: _signInWithGoogle,
-                style: ElevatedButton.styleFrom(
-                  // primary: Colors.white,
-                  // onPrimary: Colors.black,
-                  minimumSize: Size(240, 40),
-                ),
-              ),
-            ],
+      body: Stack(
+        children: [
+          // Bottom layer with one color
+          Container(
+            color: Color(0xFF16043F), // Darker shade
+            height: MediaQuery.of(context).size.height,
           ),
-        ),
+          // Top layer with gradient to transparent
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF0C0101).withOpacity(0.6), // Lighter shade with opacity
+                  Colors.transparent,
+                ],
+              ),
+            ),
+            height: MediaQuery.of(context).size.height / 2, // Adjust height as needed
+          ),
+          Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'FIRST THINGS FIRST',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      letterSpacing: 7,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 50),
+                  Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      children: [
+                        Image.asset('assets/loginimage1.png', width: MediaQuery.of(context).size.width * 0.8),
+                        SizedBox(height: 30),
+                        ElevatedButton(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Image.asset('assets/google.png', height: 35.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    'LOGIN WITH GOOGLE',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Color(0xFF6A4BBC)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                side: BorderSide(color: Colors.transparent),
+                              ),
+                            ),
+                          ),
+                          onPressed: _signInWithGoogle,
+                        ),
+                        SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
