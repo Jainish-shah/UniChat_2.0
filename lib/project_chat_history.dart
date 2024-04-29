@@ -67,51 +67,86 @@ class _ChatPageState extends State<ProjectChatHistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Text("${widget.projectName} (${widget.studentName})", style: TextStyle(fontSize: 18)),
         title: Text("${widget.projectName}", style: TextStyle(fontSize: 18)),
+
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => MainHomePage(studentId: widget.studentId))),
+          onPressed: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => MainHomePage(studentId: widget.studentId))),
         ),
+        backgroundColor: Color(0xFF120136), // Adjusted to match the darker shade of the background
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              reverse: true,
-              itemCount: messages.length,
-              itemBuilder: (ctx, index) => ListTile(
-                leading: CircleAvatar(
-                  child: Text(messages[index]['sender']![0].toUpperCase()),
-                ),
-                title: Text(messages[index]['text']!),
-                subtitle: Text(messages[index]['timestamp'].toString()),
-              ),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF16043F), // Darker shade at the top
+              Color(0xFF0C0101), // Lighter shade at the bottom
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration(
-                      labelText: 'Send a message...',
-                      border: OutlineInputBorder(),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                reverse: true,
+                itemCount: messages.length,
+                itemBuilder: (ctx, index) => Container(
+                  margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Text(messages[index]['sender']![0].toUpperCase()),
+                    ),
+                    title: Text(
+                      messages[index]['text']!,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    subtitle: Text(
+                      messages[index]['timestamp'].toString(),
+                      style: TextStyle(color: Colors.white70),
                     ),
                   ),
                 ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _sendMessage ,
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      textCapitalization: TextCapitalization.sentences,
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Send a message...',
+                        labelStyle: TextStyle(color: Colors.white70),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white54),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.send, color: Colors.white),
+                    onPressed: _sendMessage,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
