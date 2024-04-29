@@ -79,13 +79,27 @@ class _MyHomePageState extends State<MyHomePage> {
     return DefaultTabController(
       length: 3, // Number of tabs
       child: Scaffold(
-        appBar: AppBar(
-          bottom: TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.login), text: 'Login'),
-              Tab(icon: Icon(Icons.school), text: 'Instructor Login'),
-              Tab(icon: Icon(Icons.app_registration), text: 'School Registration'),
-            ],
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(80.0), // Set the height to the desired value
+          child: AppBar(
+            title: Padding(
+              padding: const EdgeInsets.only(top: 8.0), // Adjust the padding as needed
+              child: TabBar(
+                tabs: [
+                  Tab(icon: Icon(Icons.login), text: 'Login'),
+                  Tab(icon: Icon(Icons.school), text: 'Instructor Login'),
+                  Tab(icon: Icon(Icons.app_registration), text: 'School Registration'),
+                ],
+                isScrollable: true, // Set to true if tabs do not fit and need to scroll
+              ),
+            ),
+            bottom: TabBar(
+              tabs: [
+                Tab(icon: Icon(Icons.login), text: 'Login'),
+                Tab(icon: Icon(Icons.school), text: 'Instructor Login'),
+                Tab(icon: Icon(Icons.app_registration), text: 'School Registration'),
+              ],
+            ),
           ),
         ),
         body: TabBarView(
