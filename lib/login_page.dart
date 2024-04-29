@@ -58,6 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return;
       }
 
+      final firebaseUser = FirebaseAuth.instance.currentUser;
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -66,17 +67,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       final user = userCredential.user;
-
       if (user != null) {
         final authService = UserAuthenticationService();
         final userInfo = await authService.classifyUser(user.email!);
 
         if (userInfo['type'] == 'Registered') {
           if (userInfo['isFirstTimeLogin']) {
-            await updatePhotoUrl(googleUser.email, googleUser.photoUrl);
+            await updatePhotoUrl(googleUser.email, firebaseUser?.photoURL);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => loginform(studentId: userInfo['studentId'])));
           } else {
-            await updatePhotoUrl(googleUser.email, googleUser.photoUrl);
+            await updatePhotoUrl(googleUser.email, firebaseUser?.photoURL);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => MainHomePage(studentId: userInfo['studentId'])));
           }
         } else {
