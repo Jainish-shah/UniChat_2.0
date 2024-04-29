@@ -178,71 +178,90 @@ class _ProjectListingPageState extends State<ProjectListingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Student Projects'),
-        // leading: IconButton(
-        //   icon: Icon(Icons.arrow_back),
-        //   onPressed: () {
-        //     // Pop the current route off the stack
-        //     Navigator.of(context).pushReplacement(MaterialPageRoute(
-        //       builder: (context) => MainHomePage(studentId: widget.studentId), // Navigate to success page
-        //     ));
-        //   },
-        // ),
-      ),
-      body: FutureBuilder<List<Project>>(
-        future: futureProjects,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: SpinKitFoldingCube(color: Colors.blue, size: 50.0),
-            );
-          } else if (snapshot.hasError) {
-            // return Text("Error: ${snapshot.error}");
-            return Text("No projects found !!!");
-          }
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF16043F), // Darker shade at the top
+              Color(0xFF0C0101), // Lighter shade at the bottom
+            ],
+          ),
+        ),
+        child: FutureBuilder<List<Project>>(
+          future: futureProjects,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: SpinKitFoldingCube(color: Colors.blue, size: 50.0));
+            } else if (snapshot.hasError) {
+              return Text("No projects found !!!");
+            }
 
-          return ListView.builder(
-            itemCount: snapshot.data?.length ?? 0,
-            itemBuilder: (context, index) {
-              Project project = snapshot.data![index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+            return Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).padding.top), // To account for the status bar height
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child:  Text(
+                    'STUDENT PROJECTS',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Kode Mono',
+                      fontSize: 20,
+                      letterSpacing: 7,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  child: ListTile(
-                    title: Text(project.projectName),
-                    subtitle: Text(project.projectDescription),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DiscordDetailPage(
-                            projectName: project.projectName,
-                            id: project.id,
-                            studentId: widget.studentId,
-                            discordServerId: project.discordServerId,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      Project project = snapshot.data![index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black, // Background color of the container
+                            borderRadius: BorderRadius.circular(12.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.deepPurple.withOpacity(0.2), // Shadow color
+                                spreadRadius: 0,
+                                blurRadius: 6,
+                                offset: Offset(0, 2), // Shadow position
+                              ),
+                            ],
+                          ),
+                          child: ListTile(
+                            title: Text(project.projectName, style: TextStyle(color: Colors.white)),
+                            subtitle: Text(project.projectDescription, style: TextStyle(color: Colors.grey)),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DiscordDetailPage(
+                                    projectName: project.projectName,
+                                    id: project.id,
+                                    studentId: widget.studentId,
+                                    discordServerId: project.discordServerId,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       );
                     },
                   ),
                 ),
-              );
-            },
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
+
 }

@@ -86,12 +86,12 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (error) {
       Fluttertoast.showToast(msg: "Sign in failed: $error");
-      // Navigator.pushReplacement(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => MainHomePage(studentId: "66229420d1498ccc2e429dea"),
-      //         ),
-      //       );
+      Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MainHomePage(studentId: "66229420d1498ccc2e429dea"),
+              ),
+            );
     } finally {
       setState(() {
         _isSigningIn = false;
