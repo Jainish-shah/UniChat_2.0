@@ -6,30 +6,23 @@ import 'package:http/http.dart' as http;
 import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:unichat_poojan_project/chat_gpt/constants/api_consts.dart';
-import 'package:unichat_poojan_project/chat_gpt/models/get_chat_gpt_messages_list.dart';
 import 'package:unichat_poojan_project/chat_gpt/models/post_chat_model.dart';
 import 'package:unichat_poojan_project/chat_gpt/widgets/chat_widget.dart';
-import 'package:unichat_poojan_project/chat_gpt/widgets/text_widget.dart';
 import 'package:unichat_poojan_project/discord.dart';
-import '../../main_home_page.dart';
 import '../constants/constant.dart';
 import '../models/chat_model.dart';
 import '../provider/models_provider.dart';
 import '../services/api_service.dart';
-import '../services/assets_manager.dart';
 import '../services/services.dart';
-
 
 class ChatScreen extends StatefulWidget {
   final String studentId;
@@ -116,45 +109,19 @@ class _ChatScreenState extends State<ChatScreen> {
     return RegExp(r"\.(jpeg|jpg|gif|png)$", caseSensitive: false).hasMatch(url);
   }
   // --------------------working logic -------------
-  // void downloadChatHistory() async {
-  //   // Compile chat data into a text format
-  //   String chatData = chatList.map((chat) => "${chat.chatIndex == 0 ? 'User' : 'Assistant'}: ${chat.msg}").join('\n');
-  //
-  //   // Get temporary directory
-  //   final directory = await getTemporaryDirectory();
-  //   final filePath = '${directory.path}/chat_history.txt';
-  //
-  //   // Write to a text file
-  //   final File file = File(filePath);
-  //   await file.writeAsString(chatData);
-  //
-  //   // Use flutter_file_dialog to offer saving the file
-  //   final params = SaveFileDialogParams(sourceFilePath: filePath);
-  //   final filePathOrCancel = await FlutterFileDialog.saveFile(params: params);
-  //
-  //   if (filePathOrCancel != null) {
-  //     print("Save successful: $filePathOrCancel");
-  //   } else {
-  //     print("Save cancelled or failed.");
-  //   }
-  // }
-  // --------------------working logic -------------
-
-  void downloadChatHistoryAsDoc() async {
+  void downloadChatHistory() async {
     // Compile chat data into a text format
     String chatData = chatList.map((chat) => "${chat.chatIndex == 0 ? 'User' : 'Assistant'}: ${chat.msg}").join('\n');
 
     // Get temporary directory
     final directory = await getTemporaryDirectory();
-    final filePath = '${directory.path}/chat_history.doc';  // Changed from .txt to .doc
+    final filePath = '${directory.path}/chat_history.txt';
 
-    // Write to a text file with a .doc extension
-    // final File file = File(filePath);
-    // await file.writeAsString(chatData);
-    //
-    // // Optional: Use a file dialog or another method to share the file
-    // print("DOC file saved at $filePath");
+    // Write to a text file
+    final File file = File(filePath);
+    await file.writeAsString(chatData);
 
+    // Use flutter_file_dialog to offer saving the file
     final params = SaveFileDialogParams(sourceFilePath: filePath);
     final filePathOrCancel = await FlutterFileDialog.saveFile(params: params);
 
@@ -199,16 +166,13 @@ class _ChatScreenState extends State<ChatScreen> {
             },
             icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
           ),
+
           IconButton(
             icon: Icon(Icons.download),
-            onPressed: downloadChatHistoryAsDoc,
+            onPressed: () {
+              downloadChatHistory();
+            },
           ),
-          // IconButton(
-          //   icon: Icon(Icons.download),
-          //   onPressed: () {
-          //     downloadChatHistory();
-          //   },
-          // ),
         ],
       ),
       body: SafeArea(

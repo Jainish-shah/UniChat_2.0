@@ -27,8 +27,8 @@ class _loginformState extends State<loginform> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Color(0xFF14023A),
-              Color(0xFF282338),
+              Color(0xFF16043F),
+              Color(0xFF0C0101),
             ],
           ),
         ),
@@ -38,19 +38,12 @@ class _loginformState extends State<loginform> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'More About You',
+                  'MORE ABOUT YOU',
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 32,
+                    fontSize: 25,
+                    letterSpacing: 7,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 3,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10.0,
-                        color: Color(0xFF9419DF),
-                        offset: Offset(5.0, 5.0),
-                      ),
-                    ],
                   ),
                 ),
                 SizedBox(height: 30),
