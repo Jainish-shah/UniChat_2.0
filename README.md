@@ -6,8 +6,9 @@
 
 This branch is currently under development for the UniChat project, a comprehensive communication and collaboration platform tailored for academic settings. This project is built using Flutter to support both mobile and web platforms.
 
-* For Mobile: https://github.com/Jainish-shah/UniChat_2.0/edit/master
-* For Web: https://satwikbhasin.com/projects/unichat
+* For Mobile: https://webapp.diawi.com/install/CG1xE6
+* For Web: https://unichat-barbellcoders.vercel.app/
+<img width="597" alt="Screenshot 2024-05-08 at 3 35 50 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/76712602-b0fb-4147-90e0-e24d7ec3ca25">
 
 ## Getting Started
 
