@@ -2,9 +2,7 @@
 
 
 # Unichat Project
-
-
-This branch is currently under development for the UniChat project, a comprehensive communication and collaboration platform tailored for academic settings. This project is built using Flutter to support both mobile and web platforms.
+UniChat is a transformative platform designed to revolutionize the research experience for students and educators. It leverages the power of artificial intelligence (AI) to facilitate seamless collaboration on projects, provide efficient monitoring tools for teachers, and enhance the overall learning process.
 
 * For Mobile: https://webapp.diawi.com/install/CG1xE6 (FOR ANDROID)
 * For Web: https://unichat-barbellcoders.vercel.app/
@@ -34,26 +32,26 @@ Go to project root and execute the following command in console to get the requi
 flutter pub get 
 ```
 
-## Boilerplate Features:
+## Unichat Features:
 
-* Splash
-* Login
-* Home
+* Splash Screen
+* OnBoarding Page
+* Login Page
+* School Registration
+* Instructor Portal Redirect
+* Home Page for student with the Projects Listing
+* Sidebar for multiple options for students
+* Discord for project channel
+* Class Announcement / Broadcasting messages
+* Google Drive integration
+* Native chat
 * Routing
 * Theme
-* Dio
-* Database
-* MobX (to connect the reactive data of your application with the UI)
+* Google Docs for saving the chatgpt messages
+* Database - MongoDB
+* ChatGPT integration for AI assistant
 * Provider (State Management)
-* Encryption
-* Validation
-* Code Generation
-* User Notifications
-* Logging
-* Dependency Injection
-* Dark Theme Support (new)
-* Multilingual Support (new)
-* Provider example (new)
+* Validation by Google Sign IN
 
 ### Up-Coming Features:
 
