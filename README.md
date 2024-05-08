@@ -11,6 +11,22 @@ UniChat is a transformative platform designed to revolutionize the research expe
 
 UniChat integrates services like Discord for messaging, Google Docs for document management, and OpenAI's ChatGPT for AI-driven interaction, providing a unified interface that enhances academic collaboration and productivity.
 
+## Seamless Collaboration
+
+- Real-time chat system for students to exchange ideas and work together on projects.
+- Group chat functionality for focused communication within specific teams.
+- Knowledge Forum integration for easy transfer of relevant information.
+
+## AI Integration
+
+- ChatGPT integration allows students to ask questions, seek clarification, and engage in meaningful conversations related to their studies.
+
+## Project Management
+
+- Intuitive interface for educators to create and manage projects for their classes.
+- Easy integration of Google Docs for collaborative document creation and editing.
+- Monitoring tools for educators to track student progress and identify areas requiring support.
+
 ## How to Use 
 
 **Step 1:**
