@@ -1,6 +1,3 @@
-# This branch is still under development
-
-
 # Unichat Project
 UniChat is a transformative platform designed to revolutionize the research experience for students and educators. It leverages the power of artificial intelligence (AI) to facilitate seamless collaboration on projects, provide efficient monitoring tools for teachers, and enhance the overall learning process.
 
@@ -36,6 +33,7 @@ flutter pub get
 
 * Splash Screen
 * OnBoarding Page
+* Shared Preference
 * Login Page
 * School Registration
 * Instructor Portal Redirect
@@ -53,23 +51,42 @@ flutter pub get
 * Provider (State Management)
 * Validation by Google Sign IN
 
-### Up-Coming Features:
-
-* Connectivity Support
-* Background Fetch Support
-
 ### Libraries & Tools Used
 
-* [Dio](https://github.com/flutterchina/dio)
-* [Database](https://github.com/tekartik/sembast.dart)
-* [MobX](https://github.com/mobxjs/mobx.dart) (to connect the reactive data of your application with the UI)
-* [Provider](https://github.com/rrousselGit/provider) (State Management)
-* [Encryption](https://github.com/xxtea/xxtea-dart)
-* [Validation](https://github.com/dart-league/validators)
-* [Logging](https://github.com/zubairehman/Flogs)
-* [Notifications](https://github.com/AndreHaueisen/flushbar)
-* [Json Serialization](https://github.com/dart-lang/json_serializable)
-* [Dependency Injection](https://github.com/fluttercommunity/get_it)
+```
+  google_fonts: ^6.2.0
+  flutter_svg: ^2.0.10+1
+  http: ^1.0.0
+  mongo_dart: ^0.10.0
+  webview_flutter: ^3.0.0
+  url_launcher: ^6.0.20
+  shared_preferences: ^2.0.15
+  cupertino_icons: ^1.0.2
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.8
+  firebase_ui_auth: ^1.13.1
+  flutter_secure_storage: ^9.0.0
+  googleapis: ^12.0.1
+  path_provider: ^2.0.8
+  google_sign_in: ^6.2.1
+  googleapis_auth: ^1.0.0
+  googledrivehandler: ^1.0.7
+  open_file: ^3.3.2
+  flutter_launcher_icons: ^0.12.0
+  flutter_pdfview: ^1.2.1
+  cloud_firestore: ^4.15.8
+  firebase_database: ^10.4.5
+  flutter_inappwebview: ^5.3.2
+  flutter_spinkit: ^5.1.0
+  flutter_dotenv: ^5.0.2
+  fluttertoast: ^8.2.5
+  flutter_file_downloader: ^1.2.1
+  animated_text_kit: ^4.2.2
+  image_picker: ^0.8.5+3
+  flutter_easyloading: ^3.0.5
+  flutter_file_dialog: ^3.0.2
+  docx_template: ^0.4.0
+```
 
 ### Folder Structure
 Here is the core folder structure which flutter provides.
