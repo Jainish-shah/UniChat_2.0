@@ -170,3 +170,20 @@ UniChat 2.0
 ├── pubspec.yaml
 └── README.md
 ```
+
+## Some demo photos of the application
+<img width="1512" alt="Screenshot 2024-05-08 at 4 02 18 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/2f3bfeef-7fa7-43a5-bf70-a0d6e3b354cd">
+
+<img width="1512" alt="Screenshot 2024-05-08 at 4 00 09 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/40f54620-5a08-4bab-88f9-b43515d2c953">
+
+<img width="1512" alt="Screenshot 2024-05-08 at 3 59 48 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/b7bf6312-f628-4c2a-a1fc-eb25327bb0b1">
+
+<img width="1512" alt="Screenshot 2024-05-08 at 3 59 39 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/f500f013-df85-4415-b1b3-9ad4a7095b5c">
+
+<img width="1512" alt="Screenshot 2024-05-08 at 3 59 33 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/499a6bd5-0d1a-4194-9498-9f5e1c2e7fdd">
+
+
+<img width="1512" alt="Screenshot 2024-05-08 at 3 59 29 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/60acd414-42e1-44b0-943b-f64be6c6e1f0">
+
+Showing the database
+<img width="1512" alt="Screenshot 2024-05-08 at 3 56 35 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/f04222be-ab74-4d55-8eaf-883d4e2e7a1b">
