@@ -6,8 +6,10 @@
 
 This branch is currently under development for the UniChat project, a comprehensive communication and collaboration platform tailored for academic settings. This project is built using Flutter to support both mobile and web platforms.
 
-* For Mobile: https://webapp.diawi.com/install/CG1xE6
+* For Mobile: https://webapp.diawi.com/install/CG1xE6 (FOR ANDROID)
 * For Web: https://unichat-barbellcoders.vercel.app/
+* For database which is common between the Web team and Flutter App team : mongodb+srv://unichat_admin:j5DyBXwyCEIEk8Df@studentdata.twgkxcq.mongodb.net/?retryWrites=true&w=majority&appName=StudentData
+
 <img width="597" alt="Screenshot 2024-05-08 at 3 35 50 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/76712602-b0fb-4147-90e0-e24d7ec3ca25">
 
 ## Getting Started
@@ -18,10 +20,10 @@ UniChat integrates services like Discord for messaging, Google Docs for document
 
 **Step 1:**
 
-Download or clone this repo by using the link below:
+Download the App or clone this repo by using the link below:
 
 ```
-https://github.com/zubairehman/flutter-boilerplate-project.git
+https://github.com/Jainish-shah/UniChat_2.0/edit/master
 ```
 
 **Step 2:**
@@ -30,35 +32,6 @@ Go to project root and execute the following command in console to get the requi
 
 ```
 flutter pub get 
-```
-
-**Step 3:**
-
-This project uses `inject` library that works with code generation, execute the following command to generate files:
-
-```
-flutter packages pub run build_runner build --delete-conflicting-outputs
-```
-
-or watch command in order to keep the source code synced automatically:
-
-```
-flutter packages pub run build_runner watch
-```
-
-## Hide Generated Files
-
-In-order to hide generated files, navigate to `Android Studio` -> `Preferences` -> `Editor` -> `File Types` and paste the below lines under `ignore files and folders` section:
-
-```
-*.inject.summary;*.inject.dart;*.g.dart;
-```
-
-In Visual Studio Code, navigate to `Preferences` -> `Settings` and search for `Files:Exclude`. Add the following patterns:
-```
-**/*.inject.summary
-**/*.inject.dart
-**/*.g.dart
 ```
 
 ## Boilerplate Features:
