@@ -3,7 +3,7 @@ UniChat is a transformative platform designed to revolutionize the research expe
 
 * For Mobile: https://webapp.diawi.com/install/CG1xE6 (FOR ANDROID)
 * For Web: https://unichat-barbellcoders.vercel.app/
-* For database which is common between the Web team and Flutter App team : mongodb+srv://unichat_admin:j5DyBXwyCEIEk8Df@studentdata.twgkxcq.mongodb.net/?retryWrites=true&w=majority&appName=StudentData
+
 
 <img width="597" alt="Screenshot 2024-05-08 at 3 35 50 PM" src="https://github.com/Jainish-shah/UniChat_2.0/assets/47889375/76712602-b0fb-4147-90e0-e24d7ec3ca25">
 
@@ -34,7 +34,7 @@ UniChat integrates services like Discord for messaging, Google Docs for document
 Download the App or clone this repo by using the link below:
 
 ```
-https://github.com/Jainish-shah/UniChat_2.0/edit/master
+https://github.com/Poojan912/UniChat_2.0/edit/master
 ```
 
 **Step 2:**
