@@ -5,6 +5,7 @@ import 'package:unichat_poojan_project/main_home_page.dart';
 import 'package:unichat_poojan_project/project_listing.dart';
 import 'chat_gpt/constants/api_consts.dart';
 import 'chat_page.dart';
+import 'realtime_chat/ai_assistant_screen.dart';
 import 'google_drive.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -129,6 +130,15 @@ class _CustomSidebarState extends State<CustomSidebar> {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) =>
                           GoogleDrive(studentId: widget.studentId), // Navigate to success page
+                    ));
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.smart_toy, color: Colors.white),
+                  title: Text('AI Assistant', style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (ctx) => AiAssistantScreen(onBack: () => Navigator.of(ctx).pop()),
                     ));
                   },
                 ),

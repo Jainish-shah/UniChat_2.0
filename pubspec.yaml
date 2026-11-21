@@ -72,6 +72,7 @@ dependencies:
   flutter_easyloading: ^3.0.5
   flutter_file_dialog: ^3.0.2
   docx_template: ^0.4.0
+  socket_io_client: ^2.0.3+1
 
 flutter_icons:
   image_path: "assets/new_logo.jpeg"

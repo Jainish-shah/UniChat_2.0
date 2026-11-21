@@ -4,7 +4,7 @@ import 'package:unichat_poojan_project/chat_gpt/services/api_service.dart';
 import '../models/model_model.dart';
 
 class ModelsProvider with ChangeNotifier {
-  String currentModel = "gpt-3.5-turbo";
+  String currentModel = "chat"; // logical mode: chat | image | vision
 
   String get getCurrentModel {
     return currentModel;

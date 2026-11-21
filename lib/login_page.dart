@@ -7,6 +7,8 @@ import 'package:unichat_poojan_project/main_home_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'Services/UserAuthenticationService.dart';
+import 'Services/socket_service.dart';
+import 'Services/user_profile_service.dart';
 import 'loginform.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -72,6 +74,11 @@ class _LoginScreenState extends State<LoginScreen> {
         final userInfo = await authService.classifyUser(user.email!);
 
         if (userInfo['type'] == 'Registered') {
+          // Store the user's profile in Firestore and open the realtime chat connection.
+          UserProfileService.instance
+              .saveSignedInUser(studentId: '${userInfo['studentId']}', role: 'student')
+              .catchError((e) => debugPrint('Profile save failed: $e'));
+          SocketService.instance.connect().catchError((e) => debugPrint('Chat connect failed: $e'));
           if (userInfo['isFirstTimeLogin']) {
             await updatePhotoUrl(googleUser.email, firebaseUser?.photoURL);
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => loginform(studentId: userInfo['studentId'])));

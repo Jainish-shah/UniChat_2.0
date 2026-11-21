@@ -159,7 +159,7 @@ class _ChatScreenState extends State<ChatScreen> {
             onPressed: () async {
               await Services.showModalSheet(context: context).then((value) {
                 print("VALUE :: "+modelsProvider.currentModel);
-                if(modelsProvider.currentModel == "gpt-4-vision-preview") {
+                if(modelsProvider.currentModel == "vision") {
                   _showImageSelectionDialog(modelsProvider);
                 }
               });
@@ -246,7 +246,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           color: Colors.white,
                         )),
                     Visibility(
-                      visible: modelsProvider.currentModel.contains("gpt-4-vision-preview") ? true : false,
+                      visible: modelsProvider.currentModel == "vision",
                       child: IconButton(
                           onPressed: () async {
                             _showImageSelectionDialog(modelsProvider);
@@ -399,7 +399,6 @@ class _ChatScreenState extends State<ChatScreen> {
     required ModelsProvider modelsProvider,
     required String text,
     int maxTokens = 500,
-    String model = "gpt-4-vision-preview",
   }) async {
     setState(() {
       _isTyping = true;
@@ -416,54 +415,8 @@ class _ChatScreenState extends State<ChatScreen> {
     final String base64Image = await encodeImage(image);
 
     try {
-      final response = await _dio.post(
-        "$BASE_URL/chat/completions",
-        options: Options(
-          headers: {
-            HttpHeaders.authorizationHeader: 'Bearer $API_Key',
-            HttpHeaders.contentTypeHeader: "application/json",
-          },
-        ),
-        data: jsonEncode({
-          'model': model,
-          'messages': [
-            {
-              'role': 'system',
-              'content': 'You have to give concise and short answers'
-              // 'content': 'You have to match the image with given text and give concise and short answers'
-            },
-            {
-              'role': 'user',
-              'content': [
-                // {
-                //   'type': 'text',
-                //   'text':
-                //       'GPT, your task is to identify plant health issues with precision. Analyze any image of a plant or leaf I provide, and detect all abnormal conditions, whether they are diseases, pests, deficiencies, or decay. Respond strictly with the name of the condition identified, and nothing else—no explanations, no additional text. If a condition is unrecognizable, reply with \'I don\'t know\'. If the image is not plant-related, say \'Please pick another image\'',
-                // },
-                {
-                  'type': 'text',
-                  'text': 'GPT, '+text
-                  // 'text': 'Match the image with text and give the concise and short answers, Text is '+text,
-                },
-                {
-                  'type': 'image_url',
-                  'image_url': {
-                    'url': 'data:image/jpeg;base64,$base64Image',
-                  },
-                },
-              ],
-            },
-          ],
-          'max_tokens': maxTokens,
-        }),
-      );
-
-      final jsonResponse = response.data;
-
-      if (jsonResponse['error'] != null) {
-        throw HttpException(jsonResponse['error']["message"]);
-      }
-      return jsonResponse["choices"][0]["message"]["content"];
+      // Proxied through the UniChat server so no AI key lives in the app.
+      return await ApiService.askAboutImage(imageBase64: base64Image, prompt: text);
     } catch (e) {
       setState(() {
         _isTyping = false;

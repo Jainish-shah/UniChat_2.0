@@ -2,126 +2,69 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants/api_consts.dart';
 import '../models/chat_model.dart';
 import '../models/model_model.dart';
 
+/// AI calls are proxied through the UniChat realtime server, authenticated with the
+/// user's Firebase ID token. No provider API key is ever shipped in the app.
 class ApiService {
+  static Future<Map<String, String>> _headers() async {
+    final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+    if (token == null) throw const HttpException('Please sign in to use the AI assistant');
+    return {'Authorization': 'Bearer $token', 'Content-Type': 'application/json'};
+  }
+
+  static Map _decode(http.Response response) {
+    final Map json = jsonDecode(response.body);
+    if (response.statusCode >= 400 || json['error'] != null) {
+      throw HttpException('${json['error'] ?? 'AI request failed (${response.statusCode})'}');
+    }
+    return json;
+  }
+
+  /// Logical modes offered by the server: chat | vision | image (root = display label).
   static Future<List<ModelsModel>> getModels() async {
     try {
-      var response = await http.get(
-        Uri.parse("$BASE_URL/models"),
-        headers: {'Authorization': 'Bearer $API_Key'},
-      );
-
-      Map jsonResponse = jsonDecode(response.body);
-
-      if (jsonResponse['error'] != null) {
-        // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
-        throw HttpException(jsonResponse['error']["message"]);
-      }
-      // print("jsonResponse $jsonResponse");
-      List temp = [];
-      for (var value in jsonResponse["data"]) {
-        if(value["id"].toString() == "gpt-3.5-turbo" || value["id"].toString() == "dall-e-3" || value["id"].toString() == "gpt-4-vision-preview") {
-          temp.add(value);
-          log("temp ${value["id"]}");
-        }
-      }
-      return ModelsModel.modelsFromSnapshot(temp);
+      final response = await http.get(Uri.parse('$AI_SERVER_URL/api/ai/models'), headers: await _headers());
+      final json = _decode(response);
+      return ModelsModel.modelsFromSnapshot(
+          (json['models'] as List).map((m) => {'id': m['id'], 'root': m['label'], 'created': 0}).toList());
     } catch (error) {
       log("error $error");
       rethrow;
     }
   }
 
-  // Send Message fct
-  static Future<List<ChatModel>> sendMessage(
-      {required String message, required String modelId}) async {
+  /// Sends a single prompt. In "image" mode an image URL is returned (isURL = 1).
+  static Future<List<ChatModel>> sendMessage({required String message, required String modelId}) async {
     try {
-      var response;
-      if (modelId == "dall-e-3") {
-        response = await http.post(
-          Uri.parse("$BASE_URL/images/generations"),
-          headers: {
-            'Authorization': 'Bearer $API_Key',
-            "Content-Type": "application/json"
-          },
-          body: jsonEncode(
-            {
-              "model": "dall-e-3",
-              "prompt": message,
-              "n": 1,
-              "size": "1024x1024"
-            },
-          ),
-        );
-      } else {
-        response = await http.post(
-          Uri.parse("$BASE_URL/chat/completions"),
-          headers: {
-            'Authorization': 'Bearer $API_Key',
-            "Content-Type": "application/json"
-          },
-          body: jsonEncode(
-            {
-              "model": modelId,
-              // "messages": "what is flutter?",
-              "messages": [
-                {"role": "user", "content": message}
-              ],
-              "temperature": 0.7,
-            },
-          ),
-        );
+      final response = await http.post(
+        Uri.parse('$AI_SERVER_URL/api/ai/complete'),
+        headers: await _headers(),
+        body: jsonEncode({'message': message, 'model': modelId}),
+      );
+      final json = _decode(response);
+      if (json['type'] == 'image') {
+        return [ChatModel(msg: '${json['url']}', chatIndex: 1, isURL: 1)];
       }
-
-      print("+++++++++++++++++++++=");
-      print(response);
-      print("+++++++++++++++++++++=");
-
-
-      Map jsonResponse = jsonDecode(response.body);
-
-      if (jsonResponse['error'] != null) {
-        // print("jsonResponse['error'] ${jsonResponse['error']["message"]}");
-        throw HttpException(jsonResponse['error']["message"]);
-      }
-
-      List<ChatModel> chatList = [];
-      if (modelId == "dall-e-3") {
-        if (jsonResponse["data"].length > 0) {
-          chatList = List.generate(
-            jsonResponse["data"].length,
-                (index) => ChatModel(
-              msg: jsonResponse["data"][index]["url"],
-              chatIndex: 1,
-              isURL: 1,
-            ),
-          );
-          // log("jsonResponse[choices]text ${jsonResponse["choices"][0]["message"]}");
-        }
-
-        // sendMessageRequest(role: "user", sendMessageText: textEditingController.text);
-      } else {
-        if (jsonResponse["choices"].length > 0) {
-          chatList = List.generate(
-            jsonResponse["choices"].length,
-                (index) => ChatModel(
-              msg: jsonResponse["choices"][index]["message"]["content"],
-              chatIndex: 1,
-              isURL: 0,
-            ),
-          );
-          // log("jsonResponse[choices]text ${jsonResponse["choices"][0]["message"]}");
-        }
-      }
-      return chatList;
+      return [ChatModel(msg: '${json['reply']}', chatIndex: 1, isURL: 0)];
     } catch (error) {
       log("error $error");
       rethrow;
     }
+  }
+
+  /// Ask a question about an image (base64 without the data: prefix).
+  static Future<String> askAboutImage({required String imageBase64, required String prompt}) async {
+    final response = await http.post(
+      Uri.parse('$AI_SERVER_URL/api/ai/vision'),
+      headers: await _headers(),
+      body: jsonEncode({'imageBase64': imageBase64, 'prompt': prompt, 'mediaType': 'image/jpeg'}),
+    );
+    return '${_decode(response)['reply']}';
   }
 }

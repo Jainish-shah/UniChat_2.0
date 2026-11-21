@@ -2,7 +2,8 @@ import 'package:mongo_dart/mongo_dart.dart';
 
 class MongoDBService {
   late Db db;
-  final String uri = 'mongodb+srv://unichat_admin:j5DyBXwyCEIEk8Df@studentdata.twgkxcq.mongodb.net/?retryWrites=true&w=majority&appName=StudentData';
+  // Never ship database credentials in the app. Pass with --dart-define=MONGODB_URI=... for local tools only.
+  final String uri = const String.fromEnvironment('MONGODB_URI');
 
   MongoDBService() {
     db = Db(uri);

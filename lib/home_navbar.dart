@@ -4,7 +4,9 @@ import 'package:unichat_poojan_project/chat_gpt/screens/gpt_screen.dart';
 import 'package:unichat_poojan_project/main.dart';
 import 'package:unichat_poojan_project/profile_page.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'Services/fetchStudentData.dart';
+import 'Services/socket_service.dart';
 
 class CustomNavBar extends StatefulWidget implements PreferredSizeWidget {
   final String studentId;
@@ -116,7 +118,9 @@ class _CustomNavBarState extends State<CustomNavBar> {
   // }
 
   Future<void> _handleSignOut() async {
+    SocketService.instance.disconnect();
     await googleSignIn.signOut();
+    await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyHomePage()));
   }
 }

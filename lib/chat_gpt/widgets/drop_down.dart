@@ -38,14 +38,7 @@ class _ModelsDrowDownWidgetState extends State<ModelsDrowDownWidget> {
           items: List<DropdownMenuItem<String>>.generate(
               snapshot.data!.length,
                   (index) {
-                String modelName = "";
-                if(snapshot.data![index].id == "gpt-3.5-turbo") {
-                  modelName = "Chat with Chat GPT";
-                } else if(snapshot.data![index].id == "dall-e-3") {
-                  modelName = "Image Generation";
-                } else if(snapshot.data![index].id == "gpt-4-vision-preview") {
-                  modelName = "Send the Image and Get the Reply";
-                }
+                final String modelName = snapshot.data![index].root ?? snapshot.data![index].id;
                 return DropdownMenuItem(
                   value: snapshot.data![index].id,
                   child: TextWidget(

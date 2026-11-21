@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+
+    // User profiles: anyone signed in can read; users can only write their own profile.
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && request.auth.uid == uid;
+      allow delete: if false;
+
+      // Private AI assistant history: readable by its owner only, written by the server.
+      match /aiMessages/{msgId} {
+        allow read: if signedIn() && request.auth.uid == uid;
+        allow write: if false;
+      }
+    }
+
+    // Chat rooms & messages are written by the Socket.IO server (Admin SDK bypasses rules).
+    match /rooms/{roomId} {
+      allow read: if signedIn() && (!('members' in resource.data) || request.auth.uid in resource.data.members);
+      allow write: if false;
+      match /messages/{msgId} {
+        allow read: if signedIn();
+        allow write: if false;
+      }
+    }
+
+    // Legacy collection used by the old Firestore-based announcement page.
+    match /chats/{docId} {
+      allow read, create: if signedIn();
+      allow update, delete: if false;
+    }
+  }
+}

@@ -45,6 +45,34 @@ Go to project root and execute the following command in console to get the requi
 flutter pub get 
 ```
 
+## Realtime chat, Firebase and AI setup
+
+Chat runs over **Socket.IO** through the Node server in [`server/`](server/README.md). User profiles live in **Firebase** (Auth + Firestore), and every user gets a private **AI assistant**. You can also type `@ai ...` in any group chat to get an answer there.
+
+1. **Start the server**
+   ```bash
+   cd server && npm install && cp .env.example .env
+   # fill in the Firebase service account + OPENAI_API_KEY (or ANTHROPIC_API_KEY)
+   npm start            # or: DEV_AUTH=true AI_PROVIDER=mock npm run dev
+   ```
+2. **Deploy the Firestore rules**: `firebase deploy --only firestore:rules`
+3. **Run the app** and point it at the server:
+   ```bash
+   flutter pub get
+   flutter run --dart-define=CHAT_SERVER_URL=http://10.0.2.2:3000   # Android emulator
+   flutter run --dart-define=CHAT_SERVER_URL=https://your-server.example.com
+   ```
+
+| Feature | Where |
+|---|---|
+| Class announcements (realtime) | Sidebar → Class Announcements (room `announcements`) |
+| Project group chat (realtime, `@ai` supported) | Chat → project → member (room `project:<id>`) |
+| Personal AI assistant, synced across devices | Sidebar → AI Assistant |
+| ChatGPT screen (chat / image / vision) | Discord → AI, now proxied through the server |
+| User profile store | Firestore `users/{uid}`, written on Google sign-in |
+
+No API keys or database passwords are stored in the app any more.
+
 ## Unichat Features:
 
 * Splash Screen
@@ -58,7 +86,8 @@ flutter pub get
 * Discord for project channel
 * Class Announcement / Broadcasting messages
 * Google Drive integration
-* Native chat
+* Native chat (Socket.IO realtime)
+* Per-user AI assistant (OpenAI / Anthropic via server)
 * Routing
 * Theme
 * Google Docs for saving the chatgpt messages
@@ -77,6 +106,7 @@ flutter pub get
   webview_flutter: ^3.0.0
   url_launcher: ^6.0.20
   shared_preferences: ^2.0.15
+  socket_io_client: ^2.0.3+1
   cupertino_icons: ^1.0.2
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.8

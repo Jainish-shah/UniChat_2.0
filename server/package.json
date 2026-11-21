@@ -1,0 +1,26 @@
+{
+  "name": "unichat-realtime-server",
+  "version": "1.0.0",
+  "description": "UniChat realtime backend: Socket.IO chat, Firebase user store, per-user AI assistant",
+  "type": "module",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test --test-force-exit test/*.test.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.3",
+    "firebase-admin": "^12.7.0",
+    "socket.io": "^4.8.4"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.4"
+  }
+}
